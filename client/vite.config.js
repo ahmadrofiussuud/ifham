@@ -4,6 +4,10 @@ import react from '@vitejs/plugin-react'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
+  build: {
+    outDir: '../dist',
+    emptyOutDir: true
+  },
   server: {
     host: true, // Listen on all network addresses (0.0.0.0) so smartphones can access it
     port: 5173,
