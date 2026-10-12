@@ -1,5 +1,5 @@
 /**
- * Utility for Web Speech API (Text-to-Speech & Speech-to-Text)
+ * Utility for Web Speech API & Focused Arabic Vocabulary Audio
  * Tailored for Ifham Kids - Bahasa Arab Ramah Anak SD
  */
 
@@ -9,6 +9,7 @@ class SpeechService {
     this.voices = [];
     this.isSpeaking = false;
     this.recognition = null;
+    this.currentAudio = null;
 
     if (this.synth) {
       this.loadVoices();
@@ -23,26 +24,163 @@ class SpeechService {
     this.voices = this.synth.getVoices();
   }
 
-  // Extract Arabic segments or clean text for pronunciation
   containsArabic(text) {
-    return /[\u0600-\u06FF]/.test(text);
+    return /[\u0600-\u06FF]/.test(text || '');
   }
 
   /**
-   * Speak text with appropriate voice & child-friendly rate
-   * @param {string} text - text to speak
-   * @param {object} options - { lang, rate, pitch, onStart, onEnd }
+   * Stop any playing audio or speech synthesis
    */
-  speak(text, options = {}) {
+  stop() {
+    if (this.currentAudio) {
+      try {
+        this.currentAudio.pause();
+        this.currentAudio.currentTime = 0;
+      } catch (e) {
+        // ignore
+      }
+      this.currentAudio = null;
+    }
+
+    if (this.synth) {
+      try {
+        this.synth.cancel();
+      } catch (e) {
+        // ignore
+      }
+    }
+    this.isSpeaking = false;
+  }
+
+  /**
+   * Focused pronunciation for target Arabic vocabulary (e.g. Al-Hayawanat, Qittun, Baqaratun)
+   * Plays pure Arabic pronunciation with clear makhraj
+   * @param {string} arabicText - The arabic word (e.g. "قِطٌّ" or "الحَيَوَانَات")
+   * @param {string} phoneticText - Romanized makhraj (e.g. "Qit-thun" or "Al-Hayawaanaat")
+   * @param {object} options - { onStart, onEnd }
+   */
+  speakVocab(arabicText, phoneticText = '', options = {}) {
+    this.stop();
+
+    if (!arabicText && !phoneticText) return false;
+
+    const cleanArabic = (arabicText || '').trim();
+    const cleanPhonetic = (phoneticText || '').trim();
+
+    if (options.onStart) options.onStart();
+    this.isSpeaking = true;
+
+    const handleFinished = () => {
+      this.isSpeaking = false;
+      this.currentAudio = null;
+      if (options.onEnd) options.onEnd();
+    };
+
+    // 1. Try High-Quality Audio from Google TTS API
+    if (cleanArabic) {
+      try {
+        const audioUrl = `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=ar&q=${encodeURIComponent(cleanArabic)}`;
+        const audio = new Audio(audioUrl);
+        this.currentAudio = audio;
+
+        let hasPlayed = false;
+
+        audio.onplay = () => {
+          hasPlayed = true;
+        };
+
+        audio.onended = () => {
+          handleFinished();
+        };
+
+        audio.onerror = () => {
+          // If network / CORS audio fails, fallback to Web Speech Synthesis
+          if (!hasPlayed) {
+            this.speakVocabSynth(cleanArabic, cleanPhonetic, handleFinished);
+          } else {
+            handleFinished();
+          }
+        };
+
+        const playPromise = audio.play();
+        if (playPromise !== undefined) {
+          playPromise.catch(() => {
+            // Autoplay restriction or network blocked, fallback to SpeechSynthesis
+            this.speakVocabSynth(cleanArabic, cleanPhonetic, handleFinished);
+          });
+        }
+        return true;
+      } catch (e) {
+        // Fallback to synth
+        return this.speakVocabSynth(cleanArabic, cleanPhonetic, handleFinished);
+      }
+    }
+
+    return this.speakVocabSynth(cleanArabic, cleanPhonetic, handleFinished);
+  }
+
+  /**
+   * Internal SpeechSynthesis fallback for vocabulary
+   */
+  speakVocabSynth(arabicText, phoneticText, onEndCallback) {
     if (!this.synth) {
-      console.warn('Speech synthesis is not supported in this browser.');
+      if (onEndCallback) onEndCallback();
       return false;
     }
 
-    // Cancel current speech if any
+    if (this.voices.length === 0) {
+      this.loadVoices();
+    }
+
+    const arabicVoice = this.voices.find(v => v.lang.startsWith('ar') || v.lang.includes('Arabic'));
+    const indonesianVoice = this.voices.find(v => v.lang.startsWith('id') || v.lang.includes('Indonesian'));
+
+    let utteranceText = '';
+    let utteranceLang = 'ar-SA';
+    let selectedVoice = null;
+
+    if (arabicVoice && arabicText) {
+      // Browser has Arabic voice engine!
+      utteranceText = arabicText;
+      utteranceLang = 'ar-SA';
+      selectedVoice = arabicVoice;
+    } else {
+      // Browser lacks Arabic voice pack (common on Windows):
+      // Use clean phonetic pronunciation with Indonesian/default voice for clear sound!
+      utteranceText = phoneticText || arabicText;
+      utteranceLang = 'id-ID';
+      selectedVoice = indonesianVoice || null;
+    }
+
+    const utterance = new SpeechSynthesisUtterance(utteranceText);
+    utterance.lang = utteranceLang;
+    utterance.rate = 0.82; // Child-friendly slow & clear rate
+    utterance.pitch = 1.05;
+
+    if (selectedVoice) {
+      utterance.voice = selectedVoice;
+    }
+
+    utterance.onend = () => {
+      if (onEndCallback) onEndCallback();
+    };
+
+    utterance.onerror = (e) => {
+      console.warn('Speech synthesis error:', e);
+      if (onEndCallback) onEndCallback();
+    };
+
+    this.synth.speak(utterance);
+    return true;
+  }
+
+  /**
+   * Standard speak text (for backward compatibility)
+   */
+  speak(text, options = {}) {
+    if (!this.synth) return false;
     this.stop();
 
-    // Clean markdown formatting like **, ##, etc.
     const cleanText = text
       .replace(/\*\*(.*?)\*\*/g, '$1')
       .replace(/\*(.*?)\*/g, '$1')
@@ -54,17 +192,12 @@ class SpeechService {
     if (!cleanText) return false;
 
     const utterance = new SpeechSynthesisUtterance(cleanText);
-
-    // If text is primarily Arabic or Arabic phrase requested
     const hasArabic = this.containsArabic(cleanText);
     const targetLang = options.lang || (hasArabic ? 'ar-SA' : 'id-ID');
     utterance.lang = targetLang;
-
-    // Friendly rate for kids: slower, clear pronunciation
     utterance.rate = options.rate || (hasArabic ? 0.85 : 0.95);
-    utterance.pitch = options.pitch || 1.05; // slightly cheerful pitch
+    utterance.pitch = options.pitch || 1.05;
 
-    // Find best matching voice
     if (this.voices.length === 0) {
       this.loadVoices();
     }
@@ -93,7 +226,6 @@ class SpeechService {
 
     utterance.onerror = (e) => {
       this.isSpeaking = false;
-      console.warn('Speech synthesis error:', e);
       if (options.onEnd) options.onEnd();
     };
 
@@ -101,24 +233,11 @@ class SpeechService {
     return true;
   }
 
-  stop() {
-    if (this.synth) {
-      this.synth.cancel();
-      this.isSpeaking = false;
-    }
-  }
-
-  /**
-   * Check if Speech Recognition (Voice Input) is supported
-   */
   isRecognitionSupported() {
     return typeof window !== 'undefined' && 
       (Boolean(window.SpeechRecognition) || Boolean(window.webkitSpeechRecognition));
   }
 
-  /**
-   * Start listening from microphone
-   */
   startListening({ lang = 'id-ID', onResult, onError, onEnd }) {
     if (!this.isRecognitionSupported()) {
       if (onError) onError('Browser tidak mendukung perekaman suara (Speech-to-Text).');
@@ -157,5 +276,69 @@ class SpeechService {
   }
 }
 
+/**
+ * Extracts target Arabic vocabularies and their romanization/translation
+ * from a message to display dedicated voice pronunciation buttons.
+ * @param {string} content
+ * @returns {Array<{arabic: string, phonetic: string, label: string}>}
+ */
+export const extractVocabulariesFromMessage = (content = '') => {
+  if (!content) return [];
+  const results = [];
+  const seen = new Set();
+
+  // Pattern 1: **قِطٌّ** (*Qit-thun = Kucing*) or **قِطٌّ** (Qit-thun)
+  const pattern1 = /\*\*([\u0600-\u06FF\s]+)\*\*\s*\(\*?([a-zA-Z\s'-]+)(?:=|\-)?([^\*)]*)\*?\)/g;
+  let match;
+  while ((match = pattern1.exec(content)) !== null) {
+    const arabic = match[1].trim();
+    const phonetic = match[2].trim();
+    const key = `${arabic}-${phonetic}`;
+    if (!seen.has(key) && arabic.length >= 2) {
+      seen.add(key);
+      results.push({
+        arabic,
+        phonetic,
+        label: `${arabic} (${phonetic})`
+      });
+    }
+  }
+
+  // Pattern 2: [OPSI: A. قِطٌّ (Qit-thun) 🐱 | ...]
+  const pattern2 = /([A-Z]\.?\s*)?([\u0600-\u06FF\s]+)\s*\(([a-zA-Z\s'-]+)\)/g;
+  while ((match = pattern2.exec(content)) !== null) {
+    const arabic = match[2].trim();
+    const phonetic = match[3].trim();
+    const key = `${arabic}-${phonetic}`;
+    if (!seen.has(key) && arabic.length >= 2) {
+      seen.add(key);
+      results.push({
+        arabic,
+        phonetic,
+        label: `${arabic} (${phonetic})`
+      });
+    }
+  }
+
+  // Pattern 3: Topik e.g. (**Al-Hayawaanaat** / الحَيَوَانَات)
+  const pattern3 = /\(\*?([a-zA-Z\s'-]+)\*?\s*\/\s*([\u0600-\u06FF\s]+)\)/g;
+  while ((match = pattern3.exec(content)) !== null) {
+    const phonetic = match[1].trim();
+    const arabic = match[2].trim();
+    const key = `${arabic}-${phonetic}`;
+    if (!seen.has(key) && arabic.length >= 2) {
+      seen.add(key);
+      results.push({
+        arabic,
+        phonetic,
+        label: `${arabic} (${phonetic})`
+      });
+    }
+  }
+
+  return results;
+};
+
 export const speechService = new SpeechService();
 export default speechService;
+

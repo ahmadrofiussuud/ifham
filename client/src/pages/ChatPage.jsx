@@ -9,7 +9,7 @@ import {
 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import Logo from '../components/Logo';
-import { speechService } from '../utils/speechHelper';
+import { speechService, extractVocabulariesFromMessage } from '../utils/speechHelper';
 
 // Import local assets
 import assetPetunjuk from '../assets/Asset petunjuk.png';
@@ -33,6 +33,7 @@ const ChatPage = () => {
   
   // Audio & Speech States
   const [activeSpeakingIndex, setActiveSpeakingIndex] = useState(null);
+  const [activePlayingVocab, setActivePlayingVocab] = useState(null);
   const [isListening, setIsListening] = useState(false);
   
   // States and refs for revisions
@@ -408,7 +409,24 @@ const ChatPage = () => {
     return resp;
   };
 
-  // Speak handler using Web Speech API
+  // Focused Vocabulary Pronunciation handler (e.g. Al-Hayawanat, Qit-thun, Baqaratun)
+  const handlePlayVocab = (arabic, phonetic, id) => {
+    if (activePlayingVocab === id) {
+      speechService.stop();
+      setActivePlayingVocab(null);
+      return;
+    }
+
+    speechService.stop();
+    setActiveSpeakingIndex(null);
+    setActivePlayingVocab(id);
+
+    speechService.speakVocab(arabic, phonetic, {
+      onEnd: () => setActivePlayingVocab(null)
+    });
+  };
+
+  // Speak handler using Web Speech API (whole sentence)
   const handleSpeak = (text, index) => {
     if (activeSpeakingIndex === index) {
       speechService.stop();
@@ -416,6 +434,8 @@ const ChatPage = () => {
       return;
     }
 
+    speechService.stop();
+    setActivePlayingVocab(null);
     const { cleanText } = extractOptions(text);
     setActiveSpeakingIndex(index);
     speechService.speak(cleanText, {
@@ -812,10 +832,34 @@ const ChatPage = () => {
                 📚
               </div>
               <div className="text-left font-sans">
-                <h3 className="text-[15px] font-black text-[#1E3A5F]">
-                  {topicSessions.find(t => t.id === activeTopicId)?.name || 'Diskusi Belajar'}
-                </h3>
-                <p className="text-[11px] text-[#00B4B4] font-extrabold flex items-center gap-1.5">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <h3 className="text-[15px] font-black text-[#1E3A5F]">
+                    {topicSessions.find(t => t.id === activeTopicId)?.name || 'Diskusi Belajar'}
+                  </h3>
+                  {/* Quick button to pronounce active topic */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (activeTopicId === 'hewan') handlePlayVocab('الحَيَوَانَاتُ', 'Al-Hayawaanaat', 'header-topic');
+                      else if (activeTopicId === 'sekolah') handlePlayVocab('الأَدَوَاتُ المَدْرَسِيَّةُ', 'Al-Adawaat Al-Madrasiyyah', 'header-topic');
+                      else if (activeTopicId === 'angka-warna') handlePlayVocab('الأَرْقَامُ وَالأَلْوَانُ', 'Al-Arqaam wal-Alwaan', 'header-topic');
+                      else if (activeTopicId === 'buah-makanan') handlePlayVocab('الفَوَاكِهُ', 'Al-Fawaakih', 'header-topic');
+                      else if (activeTopicId === 'anggota-tubuh') handlePlayVocab('أَعْضَاءُ الجِسْمِ', "A'dhaa-ul Jism", 'header-topic');
+                      else if (activeTopicId === 'sapaan') handlePlayVocab('التَّعَارُفُ', "At-Ta'aaruf", 'header-topic');
+                      else handlePlayVocab('اللُّغَةُ العَرَبِيَّةُ', 'Al-Lughatul Arabiyyah', 'header-topic');
+                    }}
+                    className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-black border transition-all cursor-pointer ${
+                      activePlayingVocab === 'header-topic'
+                        ? 'bg-[#FFCA28] border-amber-300 text-[#1E3A5F] scale-105 shadow-xs animate-pulse'
+                        : 'bg-[#EAF9F9] border-[#00B4B4]/30 text-[#00B4B4] hover:bg-[#d6f4f4]'
+                    }`}
+                    title="Dengarkan pelafalan makhraj topik ini"
+                  >
+                    <span>{activePlayingVocab === 'header-topic' ? '⏹️' : '🔊'}</span>
+                    <span>Lafal Topik</span>
+                  </button>
+                </div>
+                <p className="text-[11px] text-[#00B4B4] font-extrabold flex items-center gap-1.5 mt-0.5">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#00B4B4] animate-pulse" />
                   {activeMode === 'socratic' && 'Socratic Tutor Aktif'}
                   {activeMode === 'guided' && 'Guided Practice Aktif'}
@@ -839,6 +883,7 @@ const ChatPage = () => {
                 {messages.map((msg, i) => {
                   const isUser = msg.role === 'user';
                   const { cleanText, options } = extractOptions(msg.content);
+                  const vocabs = extractVocabulariesFromMessage(msg.content);
                   const isSpeaking = activeSpeakingIndex === i;
 
                   return (
@@ -877,52 +922,108 @@ const ChatPage = () => {
                             {cleanText}
                           </div>
 
-                          {/* Sound Audio Button for AI Messages */}
-                          {!isUser && (
-                            <div className="mt-3 flex items-center gap-2 pt-2 border-t border-slate-100/80">
-                              <button
-                                type="button"
-                                onClick={() => handleSpeak(cleanText, i)}
-                                className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black transition-all cursor-pointer shadow-xs ${
-                                  isSpeaking 
-                                    ? 'bg-[#FFCA28] text-[#1E3A5F] animate-pulse' 
-                                    : 'bg-[#EAF9F9] hover:bg-[#d6f4f4] text-[#00B4B4]'
-                                }`}
-                              >
-                                {isSpeaking ? <VolumeX size={13} /> : <Volume2 size={13} />}
-                                <span>{isSpeaking ? 'Berhenti Bicara ⏹️' : 'Dengarkan Suara 🔊'}</span>
-                              </button>
-
-                              <span className="text-[10px] text-slate-400 font-bold hidden sm:inline">
-                                • Dengarkan makhraj & harakat
-                              </span>
-                            </div>
-                          )}
-
-                          {/* Interactive Quick Answer Option Pills */}
-                          {!isUser && options && options.length > 0 && (
-                            <div className="mt-3.5 pt-2.5 border-t border-slate-100">
-                              <p className="text-[11px] font-black text-slate-400 uppercase tracking-wider mb-2">
-                                💡 Klik salah satu jawaban:
-                              </p>
+                          {/* Target Vocabulary Audio Pronunciation Chips (Focused on target word!) */}
+                          {!isUser && vocabs && vocabs.length > 0 && (
+                            <div className="mt-3 pt-2.5 border-t border-slate-100/90">
+                              <div className="flex items-center gap-1.5 mb-2 text-[#00B4B4] font-black text-[11px] uppercase tracking-wider">
+                                <Volume2 size={13} className="text-[#00B4B4]" />
+                                <span>Lafal Kosakata Ditanyakan (Makhraj):</span>
+                              </div>
                               <div className="flex flex-wrap gap-2">
-                                {options.map((opt, optIdx) => (
-                                  <button
-                                    key={optIdx}
-                                    type="button"
-                                    onClick={() => handleSendOption(opt)}
-                                    disabled={loading}
-                                    className="bg-white hover:bg-[#EAF9F9] border-2 border-[#00B4B4] text-[#00B4B4] hover:text-[#009b9b] font-black text-xs px-3.5 py-1.5 rounded-full shadow-xs transform hover:scale-[1.03] active:scale-95 transition-all text-left cursor-pointer"
-                                  >
-                                    {opt}
-                                  </button>
-                                ))}
+                                {vocabs.map((vocab, vIdx) => {
+                                  const vocabId = `vocab-${i}-${vIdx}`;
+                                  const isPlaying = activePlayingVocab === vocabId;
+                                  return (
+                                    <button
+                                      key={vIdx}
+                                      type="button"
+                                      onClick={() => handlePlayVocab(vocab.arabic, vocab.phonetic, vocabId)}
+                                      className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-black transition-all cursor-pointer shadow-xs border ${
+                                        isPlaying
+                                          ? 'bg-[#FFCA28] border-amber-300 text-[#1E3A5F] scale-105 shadow-md animate-pulse'
+                                          : 'bg-[#EAF9F9] hover:bg-[#d5f3f3] border-[#00B4B4]/30 text-[#008383]'
+                                      }`}
+                                      title={`Dengarkan lafal makhraj ${vocab.arabic}`}
+                                    >
+                                      <span className="text-sm">{isPlaying ? '⏹️' : '🔊'}</span>
+                                      <span className="font-sans text-sm font-black">{vocab.arabic}</span>
+                                      <span className="text-[11px] font-semibold text-slate-500">({vocab.phonetic})</span>
+                                    </button>
+                                  );
+                                })}
                               </div>
                             </div>
                           )}
 
-                        </div>
+                          {/* Interactive Quick Answer Option Pills with Audio Buttons */}
+                          {!isUser && options && options.length > 0 && (
+                            <div className="mt-3.5 pt-2.5 border-t border-slate-100">
+                              <p className="text-[11px] font-black text-slate-400 uppercase tracking-wider mb-2">
+                                💡 Pilihan Jawaban (Klik 🔊 untuk dengarkan lafal):
+                              </p>
+                              <div className="flex flex-wrap gap-2">
+                                {options.map((opt, optIdx) => {
+                                  const optVocabs = extractVocabulariesFromMessage(opt);
+                                  const optVocab = optVocabs[0];
+                                  const optVocabId = `opt-${i}-${optIdx}`;
+                                  const isPlayingOpt = activePlayingVocab === optVocabId;
 
+                                  return (
+                                    <div
+                                      key={optIdx}
+                                      className="inline-flex items-center bg-white border-2 border-[#00B4B4] rounded-full shadow-xs hover:border-[#009b9b] transition-all overflow-hidden"
+                                    >
+                                      {optVocab && (
+                                        <button
+                                          type="button"
+                                          title={`Dengarkan lafal makhraj ${optVocab.arabic}`}
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            handlePlayVocab(optVocab.arabic, optVocab.phonetic, optVocabId);
+                                          }}
+                                          className={`px-2.5 py-1.5 text-xs transition-colors flex items-center justify-center border-r border-[#00B4B4]/20 cursor-pointer ${
+                                            isPlayingOpt
+                                              ? 'bg-[#FFCA28] text-[#1E3A5F] animate-pulse font-black'
+                                              : 'bg-[#EAF9F9] text-[#00B4B4] hover:bg-[#d6f4f4]'
+                                          }`}
+                                        >
+                                          {isPlayingOpt ? '⏹️' : '🔊'}
+                                        </button>
+                                      )}
+                                      <button
+                                        type="button"
+                                        onClick={() => handleSendOption(opt)}
+                                        disabled={loading}
+                                        className="px-3.5 py-1.5 text-xs font-black text-[#00B4B4] hover:text-[#009b9b] hover:bg-[#EAF9F9] transition-all cursor-pointer text-left"
+                                      >
+                                        {opt}
+                                      </button>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Optional Sentence Reader */}
+                          {!isUser && (
+                            <div className="mt-2.5 flex items-center gap-2 pt-2 border-t border-slate-100/60">
+                              <button
+                                type="button"
+                                onClick={() => handleSpeak(cleanText, i)}
+                                className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold transition-all cursor-pointer ${
+                                  isSpeaking 
+                                    ? 'bg-[#FFCA28] text-[#1E3A5F] animate-pulse' 
+                                    : 'bg-slate-100 hover:bg-slate-200 text-slate-600'
+                                }`}
+                              >
+                                {isSpeaking ? <VolumeX size={12} /> : <Volume2 size={12} />}
+                                <span>{isSpeaking ? 'Hentikan Kalimat' : 'Baca Seluruh Pesan'}</span>
+                              </button>
+                            </div>
+                          )}
+
+                        </div>
                       </div>
                     </motion.div>
                   );
