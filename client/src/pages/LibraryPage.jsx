@@ -7,6 +7,7 @@ import {
   LayoutGrid, Sigma, Dna, FlaskConical, Atom, Folder, FileText, BookOpen
 } from 'lucide-react';
 import Logo from '../components/Logo';
+import MobileBottomNav from '../components/MobileBottomNav';
 
 // Asset Imports
 import imgDocument from '../assets/halaman library asset materi.png';
@@ -100,7 +101,7 @@ const LibraryPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#EEF4FC] overflow-x-hidden font-sans pb-16">
+    <div className="min-h-screen bg-[#EEF4FC] overflow-x-hidden font-sans pb-24 md:pb-16">
       
       {/* NAVBAR */}
       <nav className="bg-white px-6 py-4 flex justify-between items-center select-none shadow-sm relative z-40 border-b border-slate-100">
@@ -421,10 +422,10 @@ const LibraryPage = () => {
                           href={`/documents/${doc.name}`} 
                           target="_blank" 
                           rel="noopener noreferrer"
-                          className="flex items-center gap-4 min-w-0 cursor-pointer hover:opacity-80 transition-opacity flex-1 pr-4"
+                          className="flex items-center gap-3 sm:gap-4 min-w-0 cursor-pointer hover:opacity-80 transition-opacity flex-1 pr-2 sm:pr-4"
                         >
                           {/* File Icon */}
-                          <img src={imgDocument} alt="Document" className="w-[60px] h-[60px] object-contain shrink-0" />
+                          <img src={imgDocument} alt="Document" className="w-10 h-10 sm:w-[60px] sm:h-[60px] object-contain shrink-0" />
                           
                           <div className="min-w-0 text-left">
                             {/* File Name */}
@@ -488,6 +489,9 @@ const LibraryPage = () => {
         </div>
 
       </main>
+
+      {/* Mobile Bottom Navigation */}
+      <MobileBottomNav />
     </div>
   );
 };

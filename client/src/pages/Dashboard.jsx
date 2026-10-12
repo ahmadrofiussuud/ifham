@@ -8,6 +8,7 @@ import {
   User
 } from 'lucide-react';
 import Logo from '../components/Logo';
+import MobileBottomNav from '../components/MobileBottomNav';
 
 // Asset Imports
 import imgMulaiDiskusi from '../assets/mulai diskusi.png';
@@ -39,7 +40,7 @@ const Dashboard = () => {
   const firstName = displayName.split(' ')[0];
 
   return (
-    <div className="min-h-screen bg-[#EEF4FC] overflow-x-hidden font-sans pb-16">
+    <div className="min-h-screen bg-[#EEF4FC] overflow-x-hidden font-sans pb-24 md:pb-16">
       
       {/* NAVBAR */}
       <nav className="bg-white px-6 py-4 flex justify-between items-center select-none shadow-sm relative z-40 border-b border-slate-100">
@@ -322,41 +323,35 @@ const Dashboard = () => {
                   <a href="#" className="text-xs font-extrabold text-[#3B82F6] hover:underline">Lihat semua</a>
                 </div>
 
-                {/* 3 badges with vertical divider lines - Scaled Up */}
-                <div className="flex items-center justify-between gap-1.5 sm:gap-3 w-full bg-white py-1">
+                {/* 3 badges responsive grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full bg-white py-1">
                   
                   {/* Badge 1: Rajin */}
-                  <div className="flex-1 flex items-center gap-2 sm:gap-3 p-1 min-w-0">
-                    <div className="w-[44px] h-[44px] sm:w-[52px] sm:h-[52px] xl:w-[58px] xl:h-[58px] bg-[#FFCA28] flex items-center justify-center shrink-0" style={{ clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)' }}>
+                  <div className="flex items-center gap-3 p-2.5 rounded-2xl bg-amber-50/50 sm:bg-transparent border sm:border-0 border-amber-100 min-w-0">
+                    <div className="w-[48px] h-[48px] bg-[#FFCA28] flex items-center justify-center shrink-0 rounded-xl">
                       <img src={imgRajin} alt="Rajin" className="w-[65%] h-[65%] object-contain" />
                     </div>
                     <div className="min-w-0 text-left">
-                      <h5 className="text-xs sm:text-sm xl:text-[15px] font-black text-[#1E3A5F]">Rajin</h5>
-                      <p className="text-[10px] sm:text-xs xl:text-[12.5px] text-slate-500 font-bold leading-tight mt-0.5">Belajar 5 hari berturut-turut</p>
+                      <h5 className="text-sm font-black text-[#1E3A5F]">Rajin</h5>
+                      <p className="text-xs text-slate-500 font-bold leading-tight mt-0.5">Belajar 5 hari berturut-turut</p>
                     </div>
                   </div>
-
-                  {/* Divider */}
-                  <div className="w-[1.5px] h-10 sm:h-12 bg-slate-200 shrink-0 self-center" />
 
                   {/* Badge 2: Fokus */}
-                  <div className="flex-1 flex items-center gap-2 sm:gap-3 p-1 min-w-0">
-                    <img src={imgFokus} alt="Fokus" className="w-[44px] h-[44px] sm:w-[52px] sm:h-[52px] xl:w-[58px] xl:h-[58px] object-contain shrink-0" />
+                  <div className="flex items-center gap-3 p-2.5 rounded-2xl bg-blue-50/50 sm:bg-transparent border sm:border-0 border-blue-100 min-w-0">
+                    <img src={imgFokus} alt="Fokus" className="w-[48px] h-[48px] object-contain shrink-0" />
                     <div className="min-w-0 text-left">
-                      <h5 className="text-xs sm:text-sm xl:text-[15px] font-black text-[#1E3A5F]">Fokus</h5>
-                      <p className="text-[10px] sm:text-xs xl:text-[12.5px] text-slate-500 font-bold leading-tight mt-0.5">Selesaikan 10 kuis</p>
+                      <h5 className="text-sm font-black text-[#1E3A5F]">Fokus</h5>
+                      <p className="text-xs text-slate-500 font-bold leading-tight mt-0.5">Selesaikan 10 kuis</p>
                     </div>
                   </div>
 
-                  {/* Divider */}
-                  <div className="w-[1.5px] h-10 sm:h-12 bg-slate-200 shrink-0 self-center" />
-
                   {/* Badge 3: Explorer */}
-                  <div className="flex-1 flex items-center gap-2 sm:gap-3 p-1 min-w-0">
-                    <img src={imgEksplorer} alt="Explorer" className="w-[44px] h-[44px] sm:w-[52px] sm:h-[52px] xl:w-[58px] xl:h-[58px] object-contain shrink-0" />
+                  <div className="flex items-center gap-3 p-2.5 rounded-2xl bg-emerald-50/50 sm:bg-transparent border sm:border-0 border-emerald-100 min-w-0">
+                    <img src={imgEksplorer} alt="Explorer" className="w-[48px] h-[48px] object-contain shrink-0" />
                     <div className="min-w-0 text-left">
-                      <h5 className="text-xs sm:text-sm xl:text-[15px] font-black text-[#1E3A5F]">Explorer</h5>
-                      <p className="text-[10px] sm:text-xs xl:text-[12.5px] text-slate-500 font-bold leading-tight mt-0.5">Pelajari 20 topik</p>
+                      <h5 className="text-sm font-black text-[#1E3A5F]">Explorer</h5>
+                      <p className="text-xs text-slate-500 font-bold leading-tight mt-0.5">Pelajari 20 topik</p>
                     </div>
                   </div>
 
@@ -425,6 +420,9 @@ const Dashboard = () => {
         </section>
 
       </main>
+
+      {/* Mobile Bottom Navigation */}
+      <MobileBottomNav />
     </div>
   );
 };

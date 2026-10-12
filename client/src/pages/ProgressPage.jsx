@@ -4,6 +4,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { LogOut, ChevronDown, User, BookOpen, Clock, Target, CheckSquare } from 'lucide-react';
 import Logo from '../components/Logo';
+import MobileBottomNav from '../components/MobileBottomNav';
 
 // Asset Imports
 import imgStar from '../assets/star.png';
@@ -89,7 +90,7 @@ const ProgressPage = () => {
   const firstName = displayName.split(' ')[0];
 
   return (
-    <div className="min-h-screen bg-[#EEF4FC] overflow-x-hidden font-sans pb-16">
+    <div className="min-h-screen bg-[#EEF4FC] overflow-x-hidden font-sans pb-24 md:pb-16">
       
       {/* NAVBAR */}
       <nav className="bg-white px-6 py-4 flex justify-between items-center select-none shadow-sm relative z-40 border-b border-slate-100">
@@ -261,22 +262,22 @@ const ProgressPage = () => {
               </div>
 
               {/* Stat Grid Underneath Chart */}
-              <div className="grid grid-cols-4 gap-4 text-center">
-                <div className="border-r border-slate-100">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
+                <div className="p-2 rounded-xl bg-slate-50/50 sm:bg-transparent sm:border-r border-slate-100">
                   <span className="text-[11px] text-slate-400 font-bold block">Rata-rata per hari</span>
-                  <span className="text-[17px] font-black text-[#00B4B4] mt-1 block">133 menit</span>
+                  <span className="text-[16px] sm:text-[17px] font-black text-[#00B4B4] mt-1 block">133 menit</span>
                 </div>
-                <div className="border-r border-slate-100">
+                <div className="p-2 rounded-xl bg-slate-50/50 sm:bg-transparent sm:border-r border-slate-100">
                   <span className="text-[11px] text-slate-400 font-bold block">Total waktu</span>
-                  <span className="text-[17px] font-black text-[#1E3A5F] mt-1 block">39j 45m</span>
+                  <span className="text-[16px] sm:text-[17px] font-black text-[#1E3A5F] mt-1 block">39j 45m</span>
                 </div>
-                <div className="border-r border-slate-100">
+                <div className="p-2 rounded-xl bg-slate-50/50 sm:bg-transparent sm:border-r border-slate-100">
                   <span className="text-[11px] text-slate-400 font-bold block">Hari aktif</span>
-                  <span className="text-[17px] font-black text-[#1E3A5F] mt-1 block">22 hari</span>
+                  <span className="text-[16px] sm:text-[17px] font-black text-[#1E3A5F] mt-1 block">22 hari</span>
                 </div>
-                <div>
+                <div className="p-2 rounded-xl bg-slate-50/50 sm:bg-transparent">
                   <span className="text-[11px] text-slate-400 font-bold block">Peningkatan</span>
-                  <span className="text-[17px] font-black text-[#00B4B4] mt-1 block">28%</span>
+                  <span className="text-[16px] sm:text-[17px] font-black text-[#00B4B4] mt-1 block">28%</span>
                 </div>
               </div>
 
@@ -435,43 +436,37 @@ const ProgressPage = () => {
               <div>
                 <h3 className="text-lg font-black text-[#1E3A5F] mb-6">Ringkasan kinerja</h3>
                 
-                <div className="flex items-center justify-between border-slate-100">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 border-slate-100">
                   {/* Item 1 */}
-                  <div className="flex items-center gap-3.5 flex-1 justify-start">
+                  <div className="flex items-center gap-3.5 p-3 rounded-2xl bg-slate-50/50 sm:bg-transparent">
                     <img src={imgFokus} alt="Target Selesai" className="w-10 h-10 object-contain shrink-0" />
-                    <div className="text-left">
+                    <div className="text-left min-w-0">
                       <span className="text-xs text-slate-400 font-bold block">Target selesai</span>
                       <span className="text-sm font-black text-[#1E3A5F] mt-0.5 block">3 dari 4</span>
                       <span className="text-[10px] text-[#00B4B4] font-extrabold block">75%</span>
                     </div>
                   </div>
 
-                  {/* Vertical Divider */}
-                  <div className="w-px h-10 bg-slate-100 mx-2" />
-
                   {/* Item 2 */}
-                  <div className="flex items-center gap-3.5 flex-1 justify-center">
+                  <div className="flex items-center gap-3.5 p-3 rounded-2xl bg-slate-50/50 sm:bg-transparent">
                     <div className="w-10 h-10 shrink-0 flex items-center justify-center">
                       <HourglassIcon />
                     </div>
-                    <div className="text-left">
+                    <div className="text-left min-w-0">
                       <span className="text-xs text-slate-400 font-bold block">Waktu tersisa</span>
                       <span className="text-sm font-black text-[#1E3A5F] mt-0.5 block">1 hari</span>
                       <span className="text-[10px] text-slate-400 font-semibold block">Hingga akhir minggu</span>
                     </div>
                   </div>
 
-                  {/* Vertical Divider */}
-                  <div className="w-px h-10 bg-slate-100 mx-2" />
-
                   {/* Item 3 */}
-                  <div className="flex items-center gap-3.5 flex-1 justify-end">
+                  <div className="flex items-center gap-3.5 p-3 rounded-2xl bg-slate-50/50 sm:bg-transparent">
                     <div className="w-10 h-10 shrink-0 flex items-center justify-center">
                       <CrosshairIcon />
                     </div>
-                    <div className="text-left">
+                    <div className="text-left min-w-0">
                       <span className="text-xs text-slate-400 font-bold block">Fokus minggu ini</span>
-                      <span className="text-[13px] font-black text-[#1E3A5F] mt-0.5 block max-w-[120px] truncate leading-tight">
+                      <span className="text-[13px] font-black text-[#1E3A5F] mt-0.5 block truncate leading-tight">
                         Mufrodat & Makhraj
                       </span>
                       <span className="text-[10px] text-slate-400 font-semibold block">Pendalaman kosakata</span>
@@ -524,6 +519,9 @@ const ProgressPage = () => {
         </div>
 
       </main>
+
+      {/* Mobile Bottom Navigation */}
+      <MobileBottomNav />
     </div>
   );
 };

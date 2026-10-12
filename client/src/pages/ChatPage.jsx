@@ -567,14 +567,30 @@ const ChatPage = () => {
       <div className="flex flex-col justify-between h-full">
         <div className="space-y-6">
           {isMobile && (
-            <div className="flex justify-between items-center border-b border-slate-100 pb-3 mb-2">
-              <span className="font-extrabold text-[#1E3A5F] text-lg">Menu Belajar</span>
-              <button 
-                onClick={() => setSidebarOpen(false)}
-                className="p-1.5 text-slate-400 hover:bg-slate-100 rounded-lg"
-              >
-                <X size={20} />
-              </button>
+            <div className="mb-3 pb-3 border-b border-slate-100">
+              <div className="flex justify-between items-center mb-3">
+                <Logo size="small" />
+                <button 
+                  onClick={() => setSidebarOpen(false)}
+                  className="p-1.5 text-slate-400 hover:bg-slate-100 rounded-lg"
+                >
+                  <X size={20} />
+                </button>
+              </div>
+              <div className="grid grid-cols-3 gap-1.5 text-center text-[11px] font-black text-[#1E3A5F]">
+                <Link to="/dashboard" className="p-2 rounded-xl bg-slate-50 hover:bg-slate-100 flex flex-col items-center gap-1">
+                  <span>🏠</span>
+                  <span>Beranda</span>
+                </Link>
+                <Link to="/library" className="p-2 rounded-xl bg-slate-50 hover:bg-slate-100 flex flex-col items-center gap-1">
+                  <span>📚</span>
+                  <span>Library</span>
+                </Link>
+                <Link to="/progress" className="p-2 rounded-xl bg-slate-50 hover:bg-slate-100 flex flex-col items-center gap-1">
+                  <span>📈</span>
+                  <span>Progress</span>
+                </Link>
+              </div>
             </div>
           )}
 
@@ -695,12 +711,12 @@ const ChatPage = () => {
     <div className="min-h-screen bg-[#EEF4FC] flex flex-col h-screen overflow-hidden font-sans">
       
       {/* NAVBAR */}
-      <nav className="bg-white px-6 py-4 flex justify-between items-center select-none shadow-sm relative z-40 border-b border-slate-100 shrink-0">
+      <nav className="bg-white px-3 sm:px-6 py-3 sm:py-4 flex justify-between items-center select-none shadow-sm relative z-40 border-b border-slate-100 shrink-0">
         <div className="flex items-center">
           {/* Menu Hamburger for mobile */}
           <button 
             onClick={() => setSidebarOpen(true)}
-            className="lg:hidden p-2 text-[#1E3A5F] hover:bg-slate-100 rounded-lg transition-colors mr-2 flex items-center justify-center"
+            className="lg:hidden p-1.5 text-[#1E3A5F] hover:bg-slate-100 rounded-lg transition-colors mr-1 sm:mr-2 flex items-center justify-center"
           >
             <Menu size={20} />
           </button>
@@ -755,7 +771,7 @@ const ChatPage = () => {
       </nav>
 
       {/* SPLIT LAYOUT AREA */}
-      <div className="flex-1 flex overflow-hidden p-6 gap-6 bg-[#EEF4FC]">
+      <div className="flex-1 flex overflow-hidden p-2 sm:p-4 lg:p-6 gap-3 lg:gap-6 bg-[#EEF4FC]">
         
         {/* DESKTOP SIDEBAR */}
         <aside className="w-80 bg-white rounded-3xl p-6 shadow-sm border border-slate-100 overflow-y-auto shrink-0 hidden lg:block h-full">
@@ -787,10 +803,10 @@ const ChatPage = () => {
         </AnimatePresence>
 
         {/* RIGHT CHAT AREA */}
-        <main className="flex-1 bg-white rounded-3xl shadow-sm border border-slate-100 flex flex-col min-h-0 relative overflow-hidden">
+        <main className="flex-1 bg-white rounded-2xl sm:rounded-3xl shadow-sm border border-slate-100 flex flex-col min-h-0 relative overflow-hidden">
           
           {/* Active Session Header */}
-          <div className="px-6 py-4.5 border-b border-slate-100 flex items-center justify-between bg-white shrink-0">
+          <div className="px-3.5 sm:px-6 py-3 sm:py-4.5 border-b border-slate-100 flex items-center justify-between bg-white shrink-0">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full bg-[#EAF9F9] flex items-center justify-center text-[#00B4B4] font-black">
                 📚
@@ -937,12 +953,12 @@ const ChatPage = () => {
           </div>
 
           {/* Input Area Form */}
-          <div className="p-4 sm:p-6 bg-[#EEF4FC] shrink-0">
+          <div className="p-2 sm:p-4 lg:p-6 bg-[#EEF4FC] shrink-0">
             <form 
               onSubmit={handleSend}
               className="max-w-4xl mx-auto relative flex items-center"
             >
-              <div className="w-full bg-white border border-slate-200 shadow-sm rounded-2xl flex items-center px-4 py-3 gap-2.5">
+              <div className="w-full bg-white border border-slate-200 shadow-sm rounded-2xl flex items-center px-3 sm:px-4 py-2.5 sm:py-3 gap-2 sm:gap-2.5">
                 <input 
                   type="file" 
                   ref={fileInputRef} 

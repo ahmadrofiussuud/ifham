@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Play, BookOpen, Volume2, Sparkles } from 'lucide-react';
+import { Play, BookOpen, Volume2, Sparkles, Menu, X } from 'lucide-react';
 import Logo from '../components/Logo';
 import BukuPanduanModal from '../components/BukuPanduanModal';
 import heroImg from '../assets/hero.png';
@@ -16,6 +16,7 @@ import achievementTali from '../assets/achievment tali.png';
 
 const LandingPage = () => {
   const [showPanduanModal, setShowPanduanModal] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   // Star component using the exact 22x33px figma asset provided by UI/UX
   const StarIcon = ({ className, style }) => (
     <img 
@@ -41,10 +42,10 @@ const LandingPage = () => {
     <div className="min-h-screen bg-gradient-to-br from-[#f0f6fc] to-[#e6eef8] overflow-x-hidden font-sans relative">
       
       {/* NAVBAR */}
-      <nav className="fixed top-0 left-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-slate-100 px-6 py-4 flex justify-between items-center select-none shadow-sm">
+      <nav className="fixed top-0 left-0 w-full z-50 bg-white/90 backdrop-blur-md border-b border-slate-100 px-4 sm:px-6 py-3.5 flex justify-between items-center select-none shadow-sm">
         <Logo size="normal" />
 
-        {/* Navigation Items (Middle) */}
+        {/* Navigation Items (Middle Desktop) */}
         <div className="hidden md:flex items-center gap-8 font-bold text-slate-500">
           <Link to="/" className="text-[#1E3A5F] relative pb-1 group">
             Beranda
@@ -72,30 +73,109 @@ const LandingPage = () => {
           </Link>
         </div>
 
-        {/* Action Buttons (Right) */}
-        <div className="flex items-center gap-3 font-bold text-sm">
+        {/* Action Buttons (Right Desktop) */}
+        <div className="hidden sm:flex items-center gap-3 font-bold text-sm">
           <button
             type="button"
             onClick={() => setShowPanduanModal(true)}
-            className="hidden sm:flex items-center gap-1.5 bg-[#EAF9F9] hover:bg-[#d6f4f4] text-[#00B4B4] border border-[#00B4B4]/30 px-3.5 py-2 rounded-xl transition-all shadow-xs"
+            className="hidden lg:flex items-center gap-1.5 bg-[#EAF9F9] hover:bg-[#d6f4f4] text-[#00B4B4] border border-[#00B4B4]/30 px-3 py-2 rounded-xl transition-all shadow-xs"
           >
             <BookOpen size={16} />
             <span className="text-xs font-black">Buku Panduan</span>
           </button>
           <Link 
             to="/login" 
-            className="bg-[#1E3A5F] hover:bg-[#152a46] text-white px-5 py-2.5 rounded-xl transition-all shadow-sm transform hover:scale-[1.02] active:scale-[0.98]"
+            className="bg-[#1E3A5F] hover:bg-[#152a46] text-white px-4 py-2 rounded-xl transition-all shadow-sm"
           >
             Masuk
           </Link>
           <Link 
             to="/register" 
-            className="bg-white border-2 border-[#00B4B4] text-[#00B4B4] hover:bg-[#00B4B4] hover:text-white px-4 py-2 rounded-xl transition-all shadow-sm transform hover:scale-[1.02] active:scale-[0.98]"
+            className="bg-white border-2 border-[#00B4B4] text-[#00B4B4] hover:bg-[#00B4B4] hover:text-white px-3.5 py-2 rounded-xl transition-all shadow-sm"
           >
             Registrasi
           </Link>
         </div>
+
+        {/* Mobile Hamburger & Quick Login Button */}
+        <div className="flex sm:hidden items-center gap-2">
+          <Link 
+            to="/login" 
+            className="bg-[#1E3A5F] text-white px-3 py-1.5 rounded-lg text-xs font-black shadow-xs"
+          >
+            Masuk
+          </Link>
+          <button
+            type="button"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="p-2 text-[#1E3A5F] hover:bg-slate-100 rounded-lg transition-colors"
+            aria-label="Toggle Menu"
+          >
+            {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
+          </button>
+        </div>
       </nav>
+
+      {/* Mobile Drawer Dropdown */}
+      {mobileMenuOpen && (
+        <div className="md:hidden fixed top-[60px] left-0 w-full bg-white border-b border-slate-200 z-40 p-4 shadow-xl flex flex-col gap-3 font-bold text-[#1E3A5F]">
+          <Link 
+            to="/" 
+            onClick={() => setMobileMenuOpen(false)}
+            className="px-3 py-2 rounded-xl hover:bg-slate-50 transition-colors"
+          >
+            Beranda
+          </Link>
+          <button 
+            type="button"
+            onClick={() => {
+              setMobileMenuOpen(false);
+              setShowPanduanModal(true);
+            }}
+            className="flex items-center justify-between px-3 py-2.5 rounded-xl bg-[#EAF9F9] text-[#00B4B4] text-left"
+          >
+            <span className="flex items-center gap-2">📖 Buku Panduan Penggunaan</span>
+            <span className="bg-[#FFCA28] text-[#1E3A5F] text-[10px] font-black px-2 py-0.5 rounded-full">Buka</span>
+          </button>
+          <Link 
+            to="/fitur" 
+            onClick={() => setMobileMenuOpen(false)}
+            className="px-3 py-2 rounded-xl hover:bg-slate-50 transition-colors"
+          >
+            Fitur
+          </Link>
+          <Link 
+            to="/cara-kerja" 
+            onClick={() => setMobileMenuOpen(false)}
+            className="px-3 py-2 rounded-xl hover:bg-slate-50 transition-colors"
+          >
+            Cara Kerja
+          </Link>
+          <Link 
+            to="/tentang" 
+            onClick={() => setMobileMenuOpen(false)}
+            className="px-3 py-2 rounded-xl hover:bg-slate-50 transition-colors"
+          >
+            Tentang Kami
+          </Link>
+          <div className="pt-2 border-t border-slate-100 grid grid-cols-2 gap-2">
+            <Link 
+              to="/login" 
+              onClick={() => setMobileMenuOpen(false)}
+              className="bg-[#1E3A5F] text-white py-2.5 rounded-xl text-center text-sm font-black"
+            >
+              Masuk
+            </Link>
+            <Link 
+              to="/register" 
+              onClick={() => setMobileMenuOpen(false)}
+              className="border-2 border-[#00B4B4] text-[#00B4B4] py-2.5 rounded-xl text-center text-sm font-black"
+            >
+              Registrasi
+            </Link>
+          </div>
+        </div>
+      )}
 
       {/* HERO SECTION */}
       <main className="max-w-7xl mx-auto px-6 pt-32 lg:pt-40 pb-20 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center min-h-[calc(100vh-80px)]">
@@ -184,7 +264,7 @@ const LandingPage = () => {
         </div>
 
         {/* HERO RIGHT COLUMN (Matches Figma exactly with Large Student Image and Floating Badges) */}
-        <div className="lg:col-span-6 flex items-center justify-center relative mt-10 lg:mt-0 select-none overflow-visible">
+        <div className="lg:col-span-6 flex items-center justify-center relative mt-8 lg:mt-0 select-none overflow-hidden lg:overflow-visible w-full max-w-full">
           
           <div className="relative w-[620px] h-[580px] flex items-center justify-center shrink-0 scale-[0.75] sm:scale-[0.8] md:scale-[0.85] lg:scale-90 xl:scale-100 origin-top-right hero-illustration-container">
             

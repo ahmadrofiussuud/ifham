@@ -83,29 +83,29 @@ const RegisterPage = () => {
   );
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-br from-[#f0f6fc] to-[#e6eef8] flex items-center justify-center p-6 md:p-12 lg:p-16 overflow-x-hidden font-sans">
-      <div className="max-w-7xl w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+    <div className="min-h-screen w-full bg-gradient-to-br from-[#f0f6fc] to-[#e6eef8] flex items-center justify-center p-4 sm:p-8 lg:p-16 overflow-x-hidden font-sans">
+      <div className="max-w-7xl w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
         
         {/* LEFT COLUMN: BRANDING & ILLUSTRATION */}
-        <div className="lg:col-span-6 flex flex-col justify-between h-full py-4 relative">
+        <div className="lg:col-span-6 flex flex-col justify-between h-full py-2 sm:py-4 relative">
           {/* Logo IfhamKids in Top Left */}
-          <div className="mb-10">
+          <div className="mb-6 sm:mb-10">
             <Logo size="normal" />
           </div>
 
           {/* Heading and Subtitle */}
-          <div className="max-w-lg mb-8">
-            <h1 className="text-4xl lg:text-5xl font-extrabold text-[#1E3A5F] leading-tight tracking-tight">
+          <div className="max-w-lg mb-6 sm:mb-8">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#1E3A5F] leading-tight tracking-tight">
               Daftar dan <br />
               mulailah <span className="text-[#00B4B4]">belajarmu</span>
             </h1>
-            <p className="text-slate-600 text-base lg:text-lg mt-4 leading-relaxed font-medium">
+            <p className="text-slate-600 text-sm sm:text-base lg:text-lg mt-3 sm:mt-4 leading-relaxed font-medium">
               Belajar lebih efektif dengan AI yang tetap membantu untuk memahami konsep.
             </p>
           </div>
 
           {/* Interactive Illustration Area with Dotted Path & Floating Badges */}
-          <div className="relative w-full max-w-md mx-auto lg:mx-0 mt-8 h-[340px] flex items-end justify-center select-none register-illustration-container">
+          <div className="relative w-full max-w-md mx-auto lg:mx-0 mt-4 sm:mt-8 h-[340px] flex items-end justify-center select-none register-illustration-container overflow-hidden lg:overflow-visible">
             
             {/* Dotted path lines behind everything */}
             <div className="absolute inset-0 w-full h-full -z-10">
@@ -156,30 +156,30 @@ const RegisterPage = () => {
             <motion.div 
               animate={{ y: [0, -8, 0] }}
               transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
-              className="absolute top-6 left-6 bg-white rounded-2xl shadow-[0_12px_36px_rgba(0,0,0,0.06)] border border-slate-100 p-3 flex items-center gap-3.5 z-20 cursor-pointer"
+              className="absolute top-6 left-2 sm:left-6 bg-white rounded-2xl shadow-[0_12px_36px_rgba(0,0,0,0.06)] border border-slate-100 p-2.5 sm:p-3 flex items-center gap-2.5 sm:gap-3.5 z-20 cursor-pointer"
             >
-              <img src={chatImg} alt="Chat Icon" className="w-10 h-10 object-contain shrink-0" />
-              <span className="font-bold text-[#1E3A5F] text-sm pr-1">Socratic Chat</span>
+              <img src={chatImg} alt="Chat Icon" className="w-8 sm:w-10 h-8 sm:h-10 object-contain shrink-0" />
+              <span className="font-bold text-[#1E3A5F] text-xs sm:text-sm pr-1">Socratic Chat</span>
             </motion.div>
 
             {/* Floating Badge 2: Ringkasan Materi */}
             <motion.div 
               animate={{ y: [0, 8, 0] }}
               transition={{ repeat: Infinity, duration: 4.5, ease: "easeInOut", delay: 0.5 }}
-              className="absolute bottom-24 -left-8 bg-white rounded-2xl shadow-[0_12px_36px_rgba(0,0,0,0.06)] border border-slate-100 p-3 flex items-center gap-3.5 z-20 cursor-pointer"
+              className="absolute bottom-24 left-2 sm:-left-8 bg-white rounded-2xl shadow-[0_12px_36px_rgba(0,0,0,0.06)] border border-slate-100 p-2.5 sm:p-3 flex items-center gap-2.5 sm:gap-3.5 z-20 cursor-pointer"
             >
               <DocumentIcon />
-              <span className="font-bold text-[#1E3A5F] text-sm pr-1">Ringkasan Materi</span>
+              <span className="font-bold text-[#1E3A5F] text-xs sm:text-sm pr-1">Ringkasan Materi</span>
             </motion.div>
 
             {/* Floating Badge 3: Achievement */}
             <motion.div 
               animate={{ y: [0, -6, 0] }}
               transition={{ repeat: Infinity, duration: 3.8, ease: "easeInOut", delay: 0.2 }}
-              className="absolute top-28 -right-4 bg-white rounded-2xl shadow-[0_12px_36px_rgba(0,0,0,0.06)] border border-slate-100 p-3 flex items-center gap-3.5 z-20 cursor-pointer"
+              className="absolute top-28 right-2 sm:-right-4 bg-white rounded-2xl shadow-[0_12px_36px_rgba(0,0,0,0.06)] border border-slate-100 p-2.5 sm:p-3 flex items-center gap-2.5 sm:gap-3.5 z-20 cursor-pointer"
             >
-              <img src={achievementImg} alt="Achievement Icon" className="w-10 h-10 object-contain shrink-0" />
-              <span className="font-bold text-[#1E3A5F] text-sm pr-1">Achievement</span>
+              <img src={achievementImg} alt="Achievement Icon" className="w-8 sm:w-10 h-8 sm:h-10 object-contain shrink-0" />
+              <span className="font-bold text-[#1E3A5F] text-xs sm:text-sm pr-1">Achievement</span>
             </motion.div>
 
             {/* Decorative Stars matching figma exact sizes centered precisely on dotted paths turns */}
@@ -196,7 +196,7 @@ const RegisterPage = () => {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="w-full max-w-[480px] bg-white rounded-[32px] shadow-[0_20px_50px_rgba(0,0,0,0.05)] border border-slate-100 p-8 sm:p-12"
+            className="w-full max-w-[480px] bg-white rounded-[32px] shadow-[0_20px_50px_rgba(0,0,0,0.05)] border border-slate-100 p-5 sm:p-8 md:p-12"
           >
             {/* Header Text */}
             <div className="mb-8">

@@ -1,18 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowLeft, BookOpen, MessageSquare, Compass, BarChart, Play, ChevronRight } from 'lucide-react';
+import { ArrowLeft, BookOpen, MessageSquare, Compass, BarChart, Play, ChevronRight, Menu, X } from 'lucide-react';
 import Logo from '../components/Logo';
 
 const CaraKerjaPage = () => {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#f0f6fc] to-[#e6eef8] font-sans relative overflow-x-hidden">
       
       {/* NAVBAR */}
-      <nav className="fixed top-0 left-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-slate-100 px-6 py-4 flex justify-between items-center shadow-sm">
+      <nav className="fixed top-0 left-0 w-full z-50 bg-white/90 backdrop-blur-md border-b border-slate-100 px-4 sm:px-6 py-3.5 flex justify-between items-center shadow-sm">
         <Logo size="normal" />
 
-        {/* Navigation Items */}
+        {/* Navigation Items (Desktop) */}
         <div className="hidden md:flex items-center gap-8 font-bold text-slate-500">
           <Link to="/" className="hover:text-[#1E3A5F] transition-colors relative pb-1 group">
             Beranda
@@ -32,22 +34,53 @@ const CaraKerjaPage = () => {
           </Link>
         </div>
 
-        {/* Action Buttons */}
-        <div className="flex items-center gap-4 font-bold text-sm">
+        {/* Action Buttons (Desktop) */}
+        <div className="hidden sm:flex items-center gap-4 font-bold text-sm">
           <Link 
             to="/login" 
-            className="bg-[#1E3A5F] hover:bg-[#152a46] text-white px-6 py-2.5 rounded-xl transition-all shadow-sm"
+            className="bg-[#1E3A5F] hover:bg-[#152a46] text-white px-5 py-2.5 rounded-xl transition-all shadow-sm"
           >
             Masuk
           </Link>
           <Link 
             to="/register" 
-            className="bg-white border-2 border-[#00B4B4] text-[#00B4B4] hover:bg-[#00B4B4] hover:text-white px-5 py-2 rounded-xl transition-all shadow-sm"
+            className="bg-white border-2 border-[#00B4B4] text-[#00B4B4] hover:bg-[#00B4B4] hover:text-white px-4 py-2 rounded-xl transition-all shadow-sm"
           >
             Registrasi
           </Link>
         </div>
+
+        {/* Mobile Hamburger */}
+        <div className="flex sm:hidden items-center gap-2">
+          <Link 
+            to="/login" 
+            className="bg-[#1E3A5F] text-white px-3 py-1.5 rounded-lg text-xs font-black shadow-xs"
+          >
+            Masuk
+          </Link>
+          <button
+            type="button"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="p-2 text-[#1E3A5F] hover:bg-slate-100 rounded-lg transition-colors"
+          >
+            {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
+          </button>
+        </div>
       </nav>
+
+      {/* Mobile Menu Drawer */}
+      {mobileMenuOpen && (
+        <div className="md:hidden fixed top-[60px] left-0 w-full bg-white border-b border-slate-200 z-40 p-4 shadow-xl flex flex-col gap-3 font-bold text-[#1E3A5F]">
+          <Link to="/" onClick={() => setMobileMenuOpen(false)} className="px-3 py-2 rounded-xl hover:bg-slate-50">Beranda</Link>
+          <Link to="/fitur" onClick={() => setMobileMenuOpen(false)} className="px-3 py-2 rounded-xl hover:bg-slate-50">Fitur</Link>
+          <Link to="/cara-kerja" onClick={() => setMobileMenuOpen(false)} className="px-3 py-2 rounded-xl bg-[#EAF9F9] text-[#00B4B4]">Cara Kerja</Link>
+          <Link to="/tentang" onClick={() => setMobileMenuOpen(false)} className="px-3 py-2 rounded-xl hover:bg-slate-50">Tentang Kami</Link>
+          <div className="pt-2 border-t border-slate-100 grid grid-cols-2 gap-2">
+            <Link to="/login" onClick={() => setMobileMenuOpen(false)} className="bg-[#1E3A5F] text-white py-2.5 rounded-xl text-center text-sm font-black">Masuk</Link>
+            <Link to="/register" onClick={() => setMobileMenuOpen(false)} className="border-2 border-[#00B4B4] text-[#00B4B4] py-2.5 rounded-xl text-center text-sm font-black">Registrasi</Link>
+          </div>
+        </div>
+      )}
 
       {/* HERO HERO SECTION */}
       <header className="max-w-6xl mx-auto px-6 pt-32 lg:pt-40 pb-16 text-center select-none">
@@ -78,14 +111,10 @@ const CaraKerjaPage = () => {
         <div className="space-y-20 relative">
           
           {/* Step 1: Upload */}
-          <div className="flex flex-col md:flex-row items-center gap-12 relative">
-            <div className="md:w-1/2 flex justify-end text-right order-1 md:order-1">
-              <motion.div 
-                whileInView={{ opacity: 1, x: 0 }}
-                initial={{ opacity: 0, x: -30 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-                className="max-w-md flex flex-col md:items-end items-center text-center md:text-right"
+          <div className="flex flex-col md:flex-row items-center gap-8 md:gap-12 relative mb-12 md:mb-16">
+            <div className="md:w-1/2 flex justify-end text-center md:text-right order-1 md:order-1 w-full">
+              <div 
+                className="max-w-md mx-auto md:mr-0 flex flex-col md:items-end items-center text-center md:text-right"
               >
                 <div className="w-12 h-12 rounded-2xl bg-[#00B4B4]/10 flex items-center justify-center text-[#00B4B4] mb-4 shadow-sm border border-[#00B4B4]/20">
                   <BookOpen size={24} />
@@ -95,22 +124,18 @@ const CaraKerjaPage = () => {
                 <p className="text-slate-500 font-semibold text-sm mt-3 leading-relaxed">
                   Unggah file PDF catatanmu, jepret foto lembar tugas, atau pilih topik pelajaran langsung dari kurikulum nasional. AI kami akan memproses materi dalam hitungan detik.
                 </p>
-              </motion.div>
+              </div>
             </div>
             
             {/* Circle timeline index */}
-            <div className="w-10 h-10 rounded-full bg-[#00B4B4] text-white font-extrabold flex items-center justify-center border-4 border-white shadow-md z-10 order-2 md:order-2">
+            <div className="w-10 h-10 rounded-full bg-[#00B4B4] text-white font-extrabold flex items-center justify-center border-4 border-white shadow-md z-10 order-2 md:order-2 shrink-0">
               1
             </div>
 
             {/* Visual Panel Right */}
-            <div className="md:w-1/2 order-3 md:order-3">
-              <motion.div 
-                whileInView={{ opacity: 1, x: 0 }}
-                initial={{ opacity: 0, x: 30 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-                className="bg-white border border-slate-100 rounded-[24px] p-6 shadow-xl shadow-navy/5 flex flex-col gap-4 max-w-md"
+            <div className="md:w-1/2 order-3 md:order-3 w-full">
+              <div 
+                className="bg-white border border-slate-100 rounded-[24px] p-6 shadow-xl shadow-navy/5 flex flex-col gap-4 max-w-md mx-auto md:ml-0"
               >
                 <div className="border-2 border-dashed border-slate-200 rounded-xl p-6 flex flex-col items-center justify-center text-center bg-slate-50 hover:bg-slate-50/80 transition-colors cursor-pointer">
                   <div className="w-10 h-10 rounded-full bg-teal-50 flex items-center justify-center text-[#00B4B4] mb-3">
@@ -124,21 +149,17 @@ const CaraKerjaPage = () => {
                   <span className="bg-[#00B4B4]/10 text-[#00B4B4] font-bold text-[10px] px-2.5 py-1 rounded-md">Di Sekolahku</span>
                   <span className="bg-[#00B4B4]/10 text-[#00B4B4] font-bold text-[10px] px-2.5 py-1 rounded-md">Angka & Warna</span>
                 </div>
-              </motion.div>
+              </div>
             </div>
           </div>
 
           {/* Step 2: Socratic Dialog */}
-          <div className="flex flex-col md:flex-row items-center gap-12 relative">
+          <div className="flex flex-col md:flex-row items-center gap-8 md:gap-12 relative mb-12 md:mb-16">
             
             {/* Visual Panel Left */}
-            <div className="md:w-1/2 flex justify-end order-3 md:order-1">
-              <motion.div 
-                whileInView={{ opacity: 1, x: 0 }}
-                initial={{ opacity: 0, x: -30 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-                className="bg-white border border-slate-100 rounded-[24px] p-5 shadow-xl shadow-navy/5 flex flex-col gap-4 max-w-md w-full"
+            <div className="md:w-1/2 flex justify-center md:justify-end order-3 md:order-1 w-full">
+              <div 
+                className="bg-white border border-slate-100 rounded-[24px] p-5 shadow-xl shadow-navy/5 flex flex-col gap-4 max-w-md mx-auto md:mr-0 w-full"
               >
                 <div className="flex gap-3 items-start">
                   <div className="w-8 h-8 rounded-full bg-[#1E3A5F] text-white flex items-center justify-center text-xs font-black shrink-0">AI</div>
@@ -152,22 +173,18 @@ const CaraKerjaPage = () => {
                   </div>
                   <div className="w-8 h-8 rounded-full bg-[#00B4B4] text-white flex items-center justify-center text-xs font-black shrink-0">Kamu</div>
                 </div>
-              </motion.div>
+              </div>
             </div>
             
             {/* Circle timeline index */}
-            <div className="w-10 h-10 rounded-full bg-[#00B4B4] text-white font-extrabold flex items-center justify-center border-4 border-white shadow-md z-10 order-2 md:order-2">
+            <div className="w-10 h-10 rounded-full bg-[#00B4B4] text-white font-extrabold flex items-center justify-center border-4 border-white shadow-md z-10 order-2 md:order-2 shrink-0">
               2
             </div>
 
             {/* Content Right */}
-            <div className="md:w-1/2 order-1 md:order-3">
-              <motion.div 
-                whileInView={{ opacity: 1, x: 0 }}
-                initial={{ opacity: 0, x: 30 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-                className="max-w-md flex flex-col items-center md:items-start text-center md:text-left"
+            <div className="md:w-1/2 order-1 md:order-3 w-full">
+              <div 
+                className="max-w-md mx-auto md:ml-0 flex flex-col items-center md:items-start text-center md:text-left"
               >
                 <div className="w-12 h-12 rounded-2xl bg-[#00B4B4]/10 flex items-center justify-center text-[#00B4B4] mb-4 shadow-sm border border-[#00B4B4]/20">
                   <MessageSquare size={24} />
@@ -177,19 +194,15 @@ const CaraKerjaPage = () => {
                 <p className="text-slate-500 font-semibold text-sm mt-3 leading-relaxed">
                   Bukannya langsung menyuapkan jawaban akhir, Kak Ifham AI akan menuntunmu melalui seri tebakan dan pertanyaan kritis yang menyenangkan, membantumu menguasai materi secara mandiri.
                 </p>
-              </motion.div>
+              </div>
             </div>
           </div>
 
           {/* Step 3: Thinking Trace */}
-          <div className="flex flex-col md:flex-row items-center gap-12 relative">
-            <div className="md:w-1/2 flex justify-end text-right order-1 md:order-1">
-              <motion.div 
-                whileInView={{ opacity: 1, x: 0 }}
-                initial={{ opacity: 0, x: -30 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-                className="max-w-md flex flex-col md:items-end items-center text-center md:text-right"
+          <div className="flex flex-col md:flex-row items-center gap-8 md:gap-12 relative mb-12 md:mb-16">
+            <div className="md:w-1/2 flex justify-center md:justify-end text-center md:text-right order-1 md:order-1 w-full">
+              <div 
+                className="max-w-md mx-auto md:mr-0 flex flex-col md:items-end items-center text-center md:text-right"
               >
                 <div className="w-12 h-12 rounded-2xl bg-[#00B4B4]/10 flex items-center justify-center text-[#00B4B4] mb-4 shadow-sm border border-[#00B4B4]/20">
                   <Compass size={24} />
@@ -199,22 +212,18 @@ const CaraKerjaPage = () => {
                 <p className="text-slate-500 font-semibold text-sm mt-3 leading-relaxed">
                   Gunakan fitur *Thinking Trace* untuk membedah langkah demi langkah analisis logika di balik setiap kosakata bahasa Arab dan kaidah sederhana, sehingga santri cilik memahami asal-usul kata dan cara melafalkannya dengan percaya diri.
                 </p>
-              </motion.div>
+              </div>
             </div>
             
             {/* Circle timeline index */}
-            <div className="w-10 h-10 rounded-full bg-[#00B4B4] text-white font-extrabold flex items-center justify-center border-4 border-white shadow-md z-10 order-2 md:order-2">
+            <div className="w-10 h-10 rounded-full bg-[#00B4B4] text-white font-extrabold flex items-center justify-center border-4 border-white shadow-md z-10 order-2 md:order-2 shrink-0">
               3
             </div>
 
             {/* Visual Panel Right */}
-            <div className="md:w-1/2 order-3 md:order-3">
-              <motion.div 
-                whileInView={{ opacity: 1, x: 0 }}
-                initial={{ opacity: 0, x: 30 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-                className="bg-white border border-slate-100 rounded-[24px] p-5 shadow-xl shadow-navy/5 flex flex-col gap-3 max-w-md w-full"
+            <div className="md:w-1/2 order-3 md:order-3 w-full">
+              <div 
+                className="bg-white border border-slate-100 rounded-[24px] p-5 shadow-xl shadow-navy/5 flex flex-col gap-3 max-w-md mx-auto md:ml-0 w-full"
               >
                 <span className="font-extrabold text-[#1E3A5F] text-xs pb-1 border-b border-slate-100">Alur Berpikir (Thinking Trace)</span>
                 <div className="flex items-center gap-3">
@@ -231,21 +240,17 @@ const CaraKerjaPage = () => {
                   <div className="w-6 h-6 rounded-full bg-teal-50 text-[#00B4B4] text-[10px] font-black flex items-center justify-center shrink-0">3</div>
                   <span className="text-[#00B4B4] font-bold text-[11px]">Lafalkan Makhraj dengan Suara Ceria</span>
                 </div>
-              </motion.div>
+              </div>
             </div>
           </div>
 
           {/* Step 4: Progress Tracker */}
-          <div className="flex flex-col md:flex-row items-center gap-12 relative">
+          <div className="flex flex-col md:flex-row items-center gap-8 md:gap-12 relative">
             
             {/* Visual Panel Left */}
-            <div className="md:w-1/2 flex justify-end order-3 md:order-1">
-              <motion.div 
-                whileInView={{ opacity: 1, x: 0 }}
-                initial={{ opacity: 0, x: -30 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-                className="bg-white border border-slate-100 rounded-[24px] p-6 shadow-xl shadow-navy/5 flex flex-col gap-4 max-w-md w-full text-left"
+            <div className="md:w-1/2 flex justify-center md:justify-end order-3 md:order-1 w-full">
+              <div 
+                className="bg-white border border-slate-100 rounded-[24px] p-6 shadow-xl shadow-navy/5 flex flex-col gap-4 max-w-md mx-auto md:mr-0 w-full text-left"
               >
                 <div className="flex justify-between items-center pb-2 border-b border-slate-100">
                   <span className="font-extrabold text-[#1E3A5F] text-xs">Evaluasi Hasil & Kuis</span>
@@ -258,22 +263,18 @@ const CaraKerjaPage = () => {
                 <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
                   <div className="bg-[#00B4B4] h-full rounded-full" style={{ width: '95%' }}></div>
                 </div>
-              </motion.div>
+              </div>
             </div>
             
             {/* Circle timeline index */}
-            <div className="w-10 h-10 rounded-full bg-[#00B4B4] text-white font-extrabold flex items-center justify-center border-4 border-white shadow-md z-10 order-2 md:order-2">
+            <div className="w-10 h-10 rounded-full bg-[#00B4B4] text-white font-extrabold flex items-center justify-center border-4 border-white shadow-md z-10 order-2 md:order-2 shrink-0">
               4
             </div>
 
             {/* Content Right */}
-            <div className="md:w-1/2 order-1 md:order-3">
-              <motion.div 
-                whileInView={{ opacity: 1, x: 0 }}
-                initial={{ opacity: 0, x: 30 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-                className="max-w-md flex flex-col items-center md:items-start text-center md:text-left"
+            <div className="md:w-1/2 order-1 md:order-3 w-full">
+              <div 
+                className="max-w-md mx-auto md:ml-0 flex flex-col items-center md:items-start text-center md:text-left"
               >
                 <div className="w-12 h-12 rounded-2xl bg-[#00B4B4]/10 flex items-center justify-center text-[#00B4B4] mb-4 shadow-sm border border-[#00B4B4]/20">
                   <BarChart size={24} />
@@ -283,7 +284,7 @@ const CaraKerjaPage = () => {
                 <p className="text-slate-500 font-semibold text-sm mt-3 leading-relaxed">
                   Uji kemampuan barumu dengan latihan soal kustom yang digenerate otomatis berdasarkan kelemahanmu, lalu lihat kemajuan grafik belajarmu tumbuh di dasbor pribadi.
                 </p>
-              </motion.div>
+              </div>
             </div>
           </div>
 
