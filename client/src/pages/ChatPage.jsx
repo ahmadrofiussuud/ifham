@@ -120,9 +120,7 @@ const ChatPage = () => {
   const [sessionId, setSessionId] = useState(null);
   const [toastMessage, setToastMessage] = useState('');
 
-  const rawApiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
-  const cleanApiUrl = rawApiUrl.endsWith('/') ? rawApiUrl.slice(0, -1) : rawApiUrl;
-  const API_URL = `${cleanApiUrl}/api/chat`;
+  const API_URL = '/api/chat';
 
   const getInitialHistory = (topicId, mode) => {
     const topic = topicSessions.find(t => t.id === topicId);

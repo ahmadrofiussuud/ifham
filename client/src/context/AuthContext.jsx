@@ -34,9 +34,7 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const rawApiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
-  const cleanApiUrl = rawApiUrl.endsWith('/') ? rawApiUrl.slice(0, -1) : rawApiUrl;
-  const API_URL = `${cleanApiUrl}/api/auth`;
+  const API_URL = '/api/auth';
 
   useEffect(() => {
     const checkLoggedIn = async () => {

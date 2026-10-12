@@ -77,11 +77,9 @@ class SpeechService {
     };
 
     // 1. Play Native Arabic Audio from our local backend proxy:
-    // This avoids Google 403 / CORS restrictions and plays authentic, crystal-clear Arabic makhraj!
-    const rawApiUrl = (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_API_URL) || 'http://localhost:5000';
-    const baseUrl = rawApiUrl.endsWith('/') ? rawApiUrl.slice(0, -1) : rawApiUrl;
+    // Uses relative '/api/tts' which Vite proxies to backend on both localhost and mobile LAN IP
     const targetWord = cleanArabic || cleanPhonetic;
-    const audioUrl = `${baseUrl}/api/tts?q=${encodeURIComponent(targetWord)}&lang=ar`;
+    const audioUrl = `/api/tts?q=${encodeURIComponent(targetWord)}&lang=ar`;
 
     try {
       const audio = new Audio(audioUrl);
