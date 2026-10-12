@@ -6,27 +6,27 @@ const AuthContext = createContext();
 export const DEMO_USERS = [
   {
     id: 'demo-murid-a',
-    name: 'Budi Santoso (Murid A)',
-    email: 'murida@pahamin.com',
-    grade: 'SMA Kelas 11 - IPA',
-    avatar: '👨‍🎓',
-    badgeColor: 'bg-blue-100 text-blue-700'
+    name: 'Ahmad Cilik (Murid A)',
+    email: 'murida@ifhamkids.com',
+    grade: 'SD Kelas 3',
+    avatar: '👦',
+    badgeColor: 'bg-emerald-100 text-emerald-700'
   },
   {
     id: 'demo-murid-b',
-    name: 'Siti Rahma (Murid B)',
-    email: 'muridb@pahamin.com',
-    grade: 'SMP Kelas 8',
-    avatar: '👩‍🎓',
-    badgeColor: 'bg-teal-100 text-teal-700'
+    name: 'Fatimah Ceria (Murid B)',
+    email: 'muridb@ifhamkids.com',
+    grade: 'SD Kelas 4',
+    avatar: '👧',
+    badgeColor: 'bg-amber-100 text-amber-700'
   },
   {
     id: 'demo-murid-c',
-    name: 'Ahmad Rofi (Murid C)',
-    email: 'muridc@pahamin.com',
-    grade: 'SMA Kelas 12 - IPS',
-    avatar: '🧑‍🎓',
-    badgeColor: 'bg-purple-100 text-purple-700'
+    name: 'Zaid Pintar (Murid C)',
+    email: 'muridc@ifhamkids.com',
+    grade: 'SD Kelas 2',
+    avatar: '🧒',
+    badgeColor: 'bg-sky-100 text-sky-700'
   }
 ];
 

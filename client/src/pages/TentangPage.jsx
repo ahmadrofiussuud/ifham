@@ -24,7 +24,7 @@ const TentangPage = () => {
     {
       name: "Ahmad Rofiqi",
       role: "CEO & AI Specialist",
-      desc: "Mengembangkan sistem kecerdasan buatan PahamIn agar mampu memandu dialog Socratic secara analitis dan empatik.",
+      desc: "Mengembangkan sistem kecerdasan buatan IfhamKids agar mampu memandu dialog Socratic bahasa Arab secara ceria dan interaktif untuk anak SD.",
       initials: "AR",
       bgGradient: "from-teal-500 to-[#00B4B4]"
     },
@@ -105,7 +105,7 @@ const TentangPage = () => {
                 Mengubah Cara Belajar Menjadi Lebih <span className="text-[#00B4B4]">Berarti</span>
               </h1>
               <p className="text-slate-500 font-medium text-base md:text-lg mt-6 leading-relaxed max-w-xl">
-                PahamIn lahir dari sebuah visi sederhana: membebaskan siswa Indonesia dari lingkaran hapalan kosong tanpa arah, lalu menggantinya dengan metode dialogis yang merangsang alur logika berpikir mandiri.
+                IfhamKids lahir dari sebuah visi ceria: mengenalkan keindahan bahasa Arab kepada anak-anak sekolah dasar melalui metode dialogis Socratic yang penuh rasa ingin tahu dan kegembiraan.
               </p>
               <div className="flex gap-4 mt-8 font-bold">
                 <Link 
@@ -135,7 +135,7 @@ const TentangPage = () => {
             >
               <img 
                 src={ilustrasiBelajar} 
-                alt="Ilustrasi Belajar PahamIn" 
+                alt="Ilustrasi Belajar IfhamKids" 
                 className="w-full h-auto rounded-[24px] object-cover" 
               />
               
@@ -197,7 +197,7 @@ const TentangPage = () => {
             </ul>
           </motion.div>
 
-          {/* Card 2: Socratic PahamIn */}
+          {/* Card 2: Socratic IfhamKids */}
           <motion.div 
             whileInView={{ opacity: 1, y: 0 }}
             initial={{ opacity: 0, y: 30 }}
@@ -212,7 +212,7 @@ const TentangPage = () => {
             <div className="w-12 h-12 rounded-2xl bg-teal-50 border border-teal-100 flex items-center justify-center text-[#00B4B4] mb-6">
               <CheckCircle size={24} />
             </div>
-            <h3 className="text-xl font-extrabold text-[#1E3A5F]">PahamIn Socratic Method</h3>
+            <h3 className="text-xl font-extrabold text-[#1E3A5F]">IfhamKids Socratic Method</h3>
             <p className="text-[#00B4B4] font-extrabold text-xs mt-2 leading-relaxed">
               Metode dialogis interaktif yang membimbing alur berpikir kritis untuk pemahaman jangka panjang.
             </p>
@@ -220,11 +220,11 @@ const TentangPage = () => {
             <ul className="mt-6 space-y-3.5 text-[#1E3A5F] font-bold text-xs text-left">
               <li className="flex items-center gap-3">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#00B4B4] shrink-0" />
-                <span>Membimbing siswa dengan pertanyaan kritis untuk mencari jawaban sendiri</span>
+                <span>Membimbing santri cilik dengan teka-teki pemantik untuk menemukan makna sendiri</span>
               </li>
               <li className="flex items-center gap-3">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#00B4B4] shrink-0" />
-                <span>Memahami pondasi konsep terdalam, bukan sekadar menghafal rumus</span>
+                <span>Memahami makna dan makhraj mufrodat, bukan sekadar menghafal mati tanpa arti</span>
               </li>
               <li className="flex items-center gap-3">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#00B4B4] shrink-0" />
@@ -284,7 +284,7 @@ const TentangPage = () => {
                   <div>
                     <h4 className="font-extrabold text-[#1E3A5F] text-sm">Visualisasi Alur Berpikir (Thinking Trace)</h4>
                     <p className="text-slate-400 font-semibold text-xs leading-relaxed mt-1">
-                      Membedah langkah-langkah logika di balik penyelesaian rumus atau analisis bacaan secara runut demi menghindari kebingungan.
+                      Membedah langkah-langkah logika di balik pengenalan huruf, harakat, dan makna kosakata bahasa Arab secara runut dan ramah anak.
                     </p>
                   </div>
                 </div>
@@ -295,9 +295,9 @@ const TentangPage = () => {
                     3
                   </div>
                   <div>
-                    <h4 className="font-extrabold text-[#1E3A5F] text-sm">Dukungan Kurikulum Nasional</h4>
+                    <h4 className="font-extrabold text-[#1E3A5F] text-sm">Kurikulum Bahasa Arab SD & MI</h4>
                     <p className="text-slate-400 font-semibold text-xs leading-relaxed mt-1">
-                      Menyediakan bank latihan soal adaptif dan modul interaktif yang diselaraskan dengan kebutuhan akademik siswa SMA.
+                      Menyediakan tebak kosakata, modul bergambar ceria, dan audio pelafalan makhraj yang diselaraskan dengan kurikulum Bahasa Arab SD/MI.
                     </p>
                   </div>
                 </div>
@@ -311,7 +311,7 @@ const TentangPage = () => {
 
       {/* TEAM SECTION (Our Founders) */}
       <section className="max-w-6xl mx-auto px-6 py-24 select-none text-center">
-        <h2 className="text-3xl md:text-4xl font-black text-[#1E3A5F] tracking-tight">Tim di Balik PahamIn</h2>
+        <h2 className="text-3xl md:text-4xl font-black text-[#1E3A5F] tracking-tight">Tim di Balik IfhamKids</h2>
         <p className="text-slate-500 font-semibold text-sm mt-3 max-w-xl mx-auto mb-16">
           Pengembang dan visioner yang berdedikasi tinggi untuk memajukan pendidikan kritis di Indonesia.
         </p>
@@ -376,12 +376,12 @@ const TentangPage = () => {
             <div className="flex items-center gap-3 mb-4">
               <Logo size="normal" showText={false} />
               <span className="text-2xl font-extrabold tracking-tight">
-                <span className="text-white">Paham</span>
-                <span className="text-[#00B4B4]">In</span>
+                <span className="text-white">Ifham</span>
+                <span className="text-[#00B4B4]">Kids</span>
               </span>
             </div>
             <p className="text-slate-400 font-bold text-xs">
-              Belajar lebih cerdas dengan AI Socratic PahamIn
+              Belajar bahasa Arab ramah anak dengan AI Socratic IfhamKids
             </p>
             <span className="text-slate-300 font-bold text-xs mt-8 mb-3 block">Follow us</span>
             <div className="flex gap-3">
@@ -425,7 +425,7 @@ const TentangPage = () => {
           <div className="lg:col-span-2">
             <h4 className="text-white font-extrabold text-sm mb-5">Hubungi Kami</h4>
             <div className="space-y-3 text-slate-400 font-semibold text-xs">
-              <span className="block">pahamin@gmail.com</span>
+              <span className="block">ifhamkids@gmail.com</span>
               <span className="block">+62 813-5832-8568</span>
               <span className="block">Malang, Indonesia</span>
             </div>
@@ -435,7 +435,7 @@ const TentangPage = () => {
 
         <div className="max-w-7xl mx-auto border-t border-slate-800/80 my-6"></div>
         <p className="text-slate-500 font-bold text-xs text-center">
-          PahamIn All Right Reserved, 2026
+          IfhamKids All Right Reserved, 2026
         </p>
       </footer>
 

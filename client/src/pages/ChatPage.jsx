@@ -4,10 +4,12 @@ import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Send, ChevronDown, LogOut, Search, Menu, X, Plus, Loader2, User,
-  UploadCloud, FolderOpen, Brain, ClipboardList, FileText, Sparkles
+  UploadCloud, FolderOpen, Brain, ClipboardList, FileText, Sparkles,
+  Volume2, VolumeX, Mic, MicOff, HelpCircle
 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import Logo from '../components/Logo';
+import { speechService } from '../utils/speechHelper';
 
 // Import local assets
 import assetPetunjuk from '../assets/Asset petunjuk.png';
@@ -19,7 +21,7 @@ import assetLatihanSoal from '../assets/asset latihan soal.png';
 import assetModeBelajar from '../assets/asset mode belajar.png';
 import assetSesiBelajar from '../assets/asset sesi belajar.png';
 import assetSocratic from '../assets/asset socratic.png';
-import iconAIPahamin from '../assets/icon AI Pahamin.png';
+import iconAIKakIfham from '../assets/icon AI Pahamin.png';
 import iconPerson from '../assets/icon person.png';
 
 const ChatPage = () => {
@@ -29,141 +31,87 @@ const ChatPage = () => {
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   
+  // Audio & Speech States
+  const [activeSpeakingIndex, setActiveSpeakingIndex] = useState(null);
+  const [isListening, setIsListening] = useState(false);
+  
   // States and refs for revisions
   const [showPlusOptions, setShowPlusOptions] = useState(false);
   const [showThinkingTrace, setShowThinkingTrace] = useState(false);
   const fileInputRef = useRef(null);
   const chatInputRef = useRef(null);
   
-  // Account-specific multi-turn dummy chat histories for demo users
+  // Account-specific multi-turn dummy chat histories for demo users (Arabic Kids Themes)
   const ACCOUNT_DEMO_HISTORIES = {
     'demo-murid-a': {
-      // Budi Santoso (SMA Kelas 11 - IPA)
-      trigonometri: [
-        { role: 'assistant', content: 'Halo Budi! Aku PahamIn, partner berfikirmu. Topik hari ini adalah **Trigonometri (SMA Kelas 11)**. Ceritakan sedikit dong, apa yang sudah kamu pahami tentang perbandingan Trigonometri?' },
-        { role: 'user', content: 'Setahu aku Trigonometri itu perbandingan sisi pada segitiga siku-siku, seperti Sinus, Cosinus, dan Tangen.' },
-        { role: 'assistant', content: 'Betul sekali! Kamu hebat 👏. Sekarang coba ingat lagi, untuk sudut $\\theta$, sisi mana saja yang disebut sisi depan, sisi samping, dan sisi miring (hipotenusa)?' },
-        { role: 'user', content: 'Sisi depan itu di hadapan sudut, sisi samping yang nempel sudut, dan sisi miring adalah sisi paling panjang (hipotenusa).' },
-        { role: 'assistant', content: 'Tepat 100%! Nah, jika sebuah tangga disandarkan ke dinding membentuk sudut $60^\\circ$ dan panjang tangganya 4 meter, perbandingan manakah yang kamu gunakan untuk mencari tinggi dinding?' },
-        { role: 'user', content: 'Kita pakai Sinus! Karena $\\sin(60^\\circ) = \\frac{\\text{sisi depan (tinggi)}}{\\text{sisi miring (tangga)}}$.' },
-        { role: 'assistant', content: 'Luar biasa Budi! Jawabanmu sangat presisi. Kamu sudah sangat paham konsep dasar Trigonometri ini. Coba simpulkan sendiri bagaimana langkah utamanya! 🌟' }
+      hewan: [
+        { role: 'assistant', content: 'Assalamu\'alaikum sahabat kecil! 🌟 Hari ini Kak Ifham mau ajak kamu jalan-jalan ke kebun binatang. Coba lihat, ada hewan berkaki empat yang suka dielus dan bunyinya "meoong". Kamu tahu bahasa Arabnya?\n\n[OPSI: A. قِطٌّ (Qit-thun) 🐱 | B. نَمِرٌ (Namirun) 🐯 | C. Butuh petunjuk 💡]' },
+        { role: 'user', content: 'Itu kucing kak! Bahasa Arabnya Qit-thun!' },
+        { role: 'assistant', content: 'Mumtaz! Pintar sekali 👏. Bahasa Arabnya **قِطٌّ** (*Qit-thun = Kucing*). Sekarang coba tebak, kalau hewan berleher panjang yang suka makan daun di pucuk pohon, bahasa Arabnya apa ya?\n\n[OPSI: A. زَرَافَةٌ (Zaroofatun) 🦒 | B. فِيلٌ (Fiilun) 🐘 | C. أَسَدٌ (Asadun) 🦁]' },
+        { role: 'user', content: 'Zaroofatun (زَرَافَةٌ) Kak!' },
+        { role: 'assistant', content: 'MasyaAllah, hebat sekali kamu! 🌟 Jawabanmu 100% tepat. Jerapah adalah **زَرَافَةٌ** (*Zaroofatun*). Kamu dapat 1 bintang hari ini! ⭐ Mau lanjut tebak hewan lainnya?\n\n[OPSI: Mau lanjut tebak hewan! 🦁 | Dengarkan suara tadi 🔊 | Ganti materi sekolah 🎒]' }
       ],
-      'hukum-newton': [
-        { role: 'assistant', content: 'Halo Budi! Yuk kita bedah materi **Hukum Newton tentang Gerak (Fisika SMA)** hari ini. Menurutmu apa bedanya Hukum I Newton dan Hukum II Newton?' },
-        { role: 'user', content: 'Hukum 1 itu tentang kelembaman ($F_{total} = 0$), benda diam tetap diam. Kalau Hukum 2 benda bergerak ada percepatan karena gaya $F = m \\cdot a$.' },
-        { role: 'assistant', content: 'Mantap sekali! Penalaran fisika yang sangat tajam 👍. Mengapa saat mobil berbelok tajam ke kanan, tubuh penumpang serasa terlempar ke kiri?' },
-        { role: 'user', content: 'Karena tubuh kita mencoba mempertahankan arah gerak lurusnya sesuai Hukum 1 Newton (Inersia)!' },
-        { role: 'assistant', content: 'Sempurna Budi! Kamu membuktikan pemahaman fisikamu luar biasa!' }
-      ],
-      'persamaan-linear': [
-        { role: 'assistant', content: 'Halo Budi! Mari kita bahas **Persamaan Linear & Sistem Persamaan (Matematika SMA)**.' },
-        { role: 'user', content: 'Siap kak, aku mau tanya cara paling cepat menyelesaikan Sistem Persamaan Linear Dua Variabel (SPLDV).' },
-        { role: 'assistant', content: 'Pertanyaan bagus! Untuk SPLDV, ada metode Eliminasi dan Substitusi. Menurutmu dalam kasus seperti $2x + y = 10$ dan $x - y = 2$, metode mana yang paling instan untuk mengeliminasi salah satu variabel?' },
-        { role: 'user', content: 'Tinggal kita jumlahkan kedua persamaan kak! Karena $+y$ dan $-y$ kalau dijumlahkan hasilnya $0$, jadi sisa $3x = 12$, ketemu $x = 4$!' },
-        { role: 'assistant', content: 'Hebat sekali Budi! Kamu sangat sigap melihat eliminasi variabel $y$. Lanjutkan dengan mencari nilai $y$ ya!' }
-      ]
-    },
-    'demo-murid-b': {
-      // Siti Rahma (SMP Kelas 8)
-      'persamaan-linear': [
-        { role: 'assistant', content: 'Halo Siti! Selamat datang di sesi **Persamaan Linear Satu Variabel (Matematika SMP)**. Pernah dengar kata "variabel"? Menurutmu variabel itu apa sih?' },
-        { role: 'user', content: 'Variabel itu huruf pengganti angka yang belum diketahui, kayak $x$ atau $y$ kak.' },
-        { role: 'assistant', content: 'Tepat sekali Siti! Pintar 🌟. Bayangkan ada timbangan: di kiri ada 2 kantong misteri ($2x$) plus 4 kelereng, di kanan ada 10 kelereng. Timbangan seimbang ($2x + 4 = 10$). Gimana cara tahu isi 1 kantong misteri?' },
-        { role: 'user', content: 'Ambil 4 kelereng dari kanan dan kiri dulu, jadi sisa $2x = 6$. Lalu 6 kelereng dibagi 2, ketemu 1 kantong isinya 3 kelereng ($x = 3$)!' },
-        { role: 'assistant', content: 'Wah hebat banget Siti! Kamu menemukan nilai $x$ dengan menganalogikannya secara visual dan intuitif. Kerja bagus!' }
-      ],
-      trigonometri: [
-        { role: 'assistant', content: 'Halo Siti! Hari ini kita kenalan dengan **Pengenalan Segitiga Siku-Siku & Trigonometri Dasar**. Tahu tidak apa ciri khas segitiga siku-siku?' },
-        { role: 'user', content: 'Segitiga siku-siku punya satu sudut yang besarnya $90^\\circ$!' },
-        { role: 'assistant', content: 'Betul sekali Siti! Dan berlaku Teorema Phytagoras $a^2 + b^2 = c^2$. Menurutmu jika alasnya 3 cm dan tingginya 4 cm, berapa panjang sisi miringnya?' },
-        { role: 'user', content: 'Panjang sisi miringnya 5 cm kak! Soalnya $3^2 + 4^2 = 9 + 16 = 25$, lalu diakar kuadrat jadi 5 cm.' },
-        { role: 'assistant', content: 'Luar biasa Siti! Jawabanmu 100% tepat 👏.' }
-      ],
-      'hukum-newton': [
-        { role: 'assistant', content: 'Halo Siti! Mari kita bahas **Gaya dan Gerak (IPA SMP)**. Menurut Siti, kenapa sepeda yang kita kayuh di jalan datar bisa berhenti sendiri kalau tidak dikayuh lagi?' },
-        { role: 'user', content: 'Karena ada gaya gesek antara ban sepeda dengan jalanan kak!' },
-        { role: 'assistant', content: 'Wah tepat sekali Siti! Gaya gesek itulah yang menghambat gerak benda.' }
-      ]
-    },
-    'demo-murid-c': {
-      // Ahmad Rofi (SMA Kelas 12 - IPS)
-      statistika: [
-        { role: 'assistant', content: 'Halo Rofi! Selamat datang di sesi **Statistika & Analisis Data Ekonomi (SMA Kelas 12)**. Dalam analisis survey ekonomi, apa perbedaan antara Mean (Rata-rata), Median, dan Modus?' },
-        { role: 'user', content: 'Mean itu jumlah semua data dibagi banyaknya data. Median itu nilai tengah setelah data diurutkan. Modus itu data yang paling sering muncul.' },
-        { role: 'assistant', content: 'Penjelasan yang ringkas dan sangat tepat Rofi! 📊 Jika dalam survey gaji karyawan terdapat 1 orang CEO dengan gaji 100 juta dan 9 karyawan dengan gaji 4 juta, manakah ukuran yang lebih tepat untuk menggambarkan gaji rata-rata mayoritas karyawan?' },
-        { role: 'user', content: 'Lebih tepat pakai Median! Karena Mean akan bias terdistorsi oleh gaji CEO yang sangat tinggi.' },
-        { role: 'assistant', content: 'Analisis logika ekonomi yang sangat kritis Rofi! Pemahaman statistikamu luar biasa 👍.' }
-      ],
-      trigonometri: [
-        { role: 'assistant', content: 'Halo Rofi! Mari diskusi tentang **Aplikasi Trigonometri dalam Pengukuran Lapangan**. Pernah dengar alat Klinometer untuk mengukur tinggi pohon atau gedung?' },
-        { role: 'user', content: 'Pernah kak, alat untuk mengukur sudut elevasi mata kita ke puncak gedung.' },
-        { role: 'assistant', content: 'Tepat sekali! Dengan tahu jarak ke gedung dan sudut elevasinya, perbandingan trigonometri mana yang kita pakai untuk menghitung tinggi gedung?' },
-        { role: 'user', content: 'Pakai Tangen! Karena $\\tan(\\theta) = \\frac{\\text{tinggi gedung}}{\\text{jarak mendatar}}$.' },
-        { role: 'assistant', content: 'Keren banget Rofi! Kamu memahami penerapan praktisnya dengan sempurna.' }
-      ],
-      'hukum-newton': [
-        { role: 'assistant', content: 'Halo Rofi! Yuk kita pelajari **Konsep Fisika Terapan & Penerapan Hukum Newton**.' },
-        { role: 'user', content: 'Halo kak, aku tertarik dengan Hukum III Newton tentang Aksi-Reaksi.' },
-        { role: 'assistant', content: 'Topik menarik! Hukum III Newton menyatakan $F_{aksi} = -F_{reaksi}$. Saat roket meluncur ke luar angkasa, gaya aksinya adalah semburan gas ke bawah. Menurut Rofi, apa gaya reaksinya?' },
-        { role: 'user', content: 'Gaya dorong gas ke atas yang membuat badan roket terangkat meluncur ke udara!' },
-        { role: 'assistant', content: 'Sempurna Rofi! Pemahaman fisika terapanmu sangat luar biasa.' }
+      sekolah: [
+        { role: 'assistant', content: 'Ahlan wa Sahlan di kelasku! 🎒 Di dalam tasku ada benda penting untuk menulis di buku catatan. Bahasa Arabnya adalah **قَلَمٌ** (*Qolamun*). Artinya apa ya jagoan?\n\n[OPSI: A. Pena / Pulpen ✏️ | B. Papan Tulis 📋 | C. Penghapus 🧼]' },
+        { role: 'user', content: 'Pena atau Pulpen kak!' },
+        { role: 'assistant', content: 'Mumtaz jagoan! Betul sekali, **قَلَمٌ** (*Qolamun = Pena/Pulpen*). Nah, kalau benda tempat kita menyimpan buku dan pensil saat berangkat sekolah apa hayo?\n\n[OPSI: A. حَقِيبَةٌ (Haqiybatun) 🎒 | B. كِتَابٌ (Kitaabun) 📖 | C. مَكْتَبٌ (Maktabun) 🪑]' }
       ]
     }
   };
 
-  // Topic-based sessions list with default fallback chat history
+  // Topic-based sessions list with Arabic curriculum for elementary kids
   const topicSessions = [
     { 
-      id: 'trigonometri', 
-      name: 'Trigonometri', 
+      id: 'hewan', 
+      name: 'Hewan Ceria (الحَيَوَانَات)', 
+      icon: '🦁',
       history: [
-        { role: 'assistant', content: 'Halo! Aku PahamIn, partner berfikirmu. Topik apa yang ingin kita bedah secara mendalam hari ini? Sebelumnya, ceritakan sedikit dong apa yang sudah kamu ketahui tentang Trigonometri!' },
-        { role: 'user', content: 'Kamu tahu ngga Trigonometri itu apa?. Kalo setahu Aku Trigonometri itu perbandingan sisi pada segitiga siku-siku.' },
-        { role: 'assistant', content: 'Betul sekali!. Coba kamu sebutkan 3 perbandingan Trigonometri dasar yang kamu tahu.' },
-        { role: 'user', content: 'Setahu aku ada Sinus, Cosinus, dan Tangen' },
-        { role: 'assistant', content: 'Kamu hebat!. Untuk segitiga siku-siku sisi mana yang disebut sisi depan, sisi samping, dan sisi miring?' },
-        { role: 'user', content: 'Sisi depan adalah sisi yang berhadapan dengan sudut, sisi samping yang berdekatan, dan sisi miring adalah hipotenusa.' },
-        { role: 'assistant', content: 'Tepat sekali!. Sekarang bagaimana kamu menggunakan perbandingan ini untuk mencari panjang salah satu sisi?' },
-        { role: 'user', content: 'Aku pilih perbandingan yang sesuai, lalu substitusi nilai yang diketahui untuk mencari sisi yang belum diketahui.' },
-        { role: 'assistant', content: 'Bagus sekali! Kamu sudah memahami konsep dasar Trigonometri dengan baik. Sekarang, apakah kamu ingin mencoba latihan soal atau ada bagian tertentu yang ingin kita bahas lebih lanjut?' }
+        { role: 'assistant', content: 'Assalamu\'alaikum sahabat ceria! 🌟 Hari ini Kak Ifham temani kamu belajar kosakata hewan (**Al-Hayawaanaat** / الحَيَوَانَات). Coba tebak, hewan yang dijuluki Raja Hutan yang gagah bersuara "Roarrr", apa bahasa Arabnya ya?\n\n[OPSI: A. أَسَدٌ (Asadun) 🦁 | B. قِطٌّ (Qit-thun) 🐱 | C. Butuh petunjuk 💡]' }
       ]
     },
     { 
-      id: 'hukum-newton', 
-      name: 'Hukum Newton', 
+      id: 'sekolah', 
+      name: 'Di Sekolahku (الأَدَوَات)', 
+      icon: '🎒',
       history: [
-        { role: 'assistant', content: 'Halo! Aku PahamIn, partner berfikirmu. Hari ini kita mau bedah konsep seru tentang Hukum Newton nih. Sebelum kita mulai, ceritakan sedikit dong, menurutmu apa sih dasarnya Hukum Newton itu?' },
-        { role: 'user', content: 'Setahu aku Hukum Newton itu tentang gerak benda dan gaya yang mempengaruhinya. Ada Hukum 1, 2, dan 3.' },
-        { role: 'assistant', content: 'Mantap! Pemahaman awal yang bagus sekali. Sekarang, coba bayangkan saat kamu naik mobil lalu tiba-tiba mobil direm mendadak, tubuhmu akan terdorong ke depan, kan? Menurutmu, hukum keberapa yang menjelaskan fenomena ini dan mengapa?' },
-        { role: 'user', content: 'Itu Hukum Newton 1, karena tubuh kita cenderung mempertahankan keadaannya yang sedang bergerak maju.' },
-        { role: 'assistant', content: 'Luar biasa! Benar sekali, itu disebut Hukum Inersia atau Kelembaman. Nah, sekarang bagaimana dengan Hukum Newton 2? Apa yang terjadi pada percepatan suatu benda jika gaya yang diberikan semakin besar?' }
+        { role: 'assistant', content: 'Bismillah! Yuk belajar perlengkapan sekolah (**Al-Adawaat Al-Madrasiyyah** / الأَدَوَات المَدْرَسِيَّة) 🎒. Benda berlembar-lembar yang kita baca untuk belajar bahasa Arab adalah **كِتَابٌ** (*Kitaabun*). Apa ya artinya?\n\n[OPSI: A. Buku Bacaan 📖 | B. Pensil Warna ✏️ | C. Penggaris 📏]' }
       ]
     },
     { 
-      id: 'persamaan-linear', 
-      name: 'Persamaan Linear', 
+      id: 'angka-warna', 
+      name: 'Angka & Warna (الأَرْقَام)', 
+      icon: '🎨',
       history: [
-        { role: 'assistant', content: 'Halo! Aku PahamIn, partner berfikirmu. Yuk kita bahas Persamaan Linear hari ini. Sebelumnya, pernah dengar istilah "variabel" dalam matematika? Menurutmu apa itu?' },
-        { role: 'user', content: 'Variabel itu seperti huruf pengganti angka yang belum diketahui nilainya, contohnya x atau y.' },
-        { role: 'assistant', content: 'Tepat sekali! Variabel adalah simbol untuk nilai yang belum diketahui. Nah, jika kita punya persamaan sederhana seperti `2x + 4 = 10`, langkah apa yang terpikir olehmu untuk mencari nilai x?' },
-        { role: 'user', content: 'Kita kurangi kedua ruas dengan 4 dulu, jadi 2x = 6. Lalu dibagi 2, ketemu x = 3.' },
-        { role: 'assistant', content: 'Hebat! Kamu melakukan pemindahan ruas dengan sangat logis. Mengapa kita harus melakukan operasi yang sama (seperti mengurangi 4 atau membagi 2) di kedua sisi persamaan?' }
+        { role: 'assistant', content: 'Ahlan wa Sahlan! Mari kita hitung dan sebutkan warna-warni ceria (**Al-Arqaam wal-Alwaan** / الأَرْقَام وَالأَلْوَان) 🌈. Angka satu dalam bahasa Arab adalah **وَاحِدٌ** (*Waahidun*). Coba tebak kalau angka dua apa ya?\n\n[OPSI: A. اِثْنَانِ (Itsnaani) ✌️ | B. ثَلَاثَةٌ (Tsalaatsatun) 3️⃣ | C. أَرْبَعَةٌ (Arba\'atun) 4️⃣]' }
       ]
     },
-    {
-      id: 'statistika',
-      name: 'Statistika & Data',
+    { 
+      id: 'buah-makanan', 
+      name: 'Buah & Makanan (الفَوَاكِه)', 
+      icon: '🍎',
       history: [
-        { role: 'assistant', content: 'Halo! Mari belajar Statistika & Olah Data. Apa yang kamu ketahui tentang Mean, Median, dan Modus?' },
-        { role: 'user', content: 'Mean itu rata-rata, Median itu nilai tengah, dan Modus itu nilai terbanyak.' },
-        { role: 'assistant', content: 'Bagus sekali! Bagaimana cara mencari Median dari sekumpulan data yang jumlahnya genap?' },
-        { role: 'user', content: 'Kita urutkan datanya dulu, lalu ambil dua data di tengah dan dicari rata-ratanya.' },
-        { role: 'assistant', content: 'Sangat tepat! Kamu mahir dalam pemrosesan data matematika.' }
+        { role: 'assistant', content: 'Nyam! Di atas meja ada buah lezat berwarna merah manis (**Al-Fawaakih** / الفَوَاكِه) 🍎. Bahasa Arab apel adalah **تُفَّاحَةٌ** (*Tuffaahatun*). Kalau pisang berwarna kuning apa ya?\n\n[OPSI: A. مَوْزٌ (Mauzun) 🍌 | B. بُرْتُقَالٌ (Burtuqoolun) 🍊 | C. عِنَبٌ (Inabun) 🍇]' }
+      ]
+    },
+    { 
+      id: 'anggota-tubuh', 
+      name: 'Anggota Tubuh (أَعْضَاء الجِسْم)', 
+      icon: '🖐️',
+      history: [
+        { role: 'assistant', content: 'Alhamdulillah tubuh kita diciptakan sempurna! Di wajah kita ada dua indera penglihat yang indah bernama **عَيْنٌ** (*\'Ainun = Mata*). Kalau indera pendengar kita apa ya?\n\n[OPSI: A. أُذُنٌ (Udzunun) 👂 | B. أَنْفٌ (Anfun) 👃 | C. فَمٌ (Famun) 👄]' }
+      ]
+    },
+    { 
+      id: 'sapaan', 
+      name: 'Sapaan & Teman (التَّعَارُف)', 
+      icon: '🤝',
+      history: [
+        { role: 'assistant', content: 'Assalamu\'alaikum! Saat bertemu teman baru, kita mengucapkan *Kaifa haaluk?* (كَيْفَ حَالُكَ؟) yang artinya "Bagaimana kabarmu?". Coba jawab Kak Ifham dengan gembira ya!\n\n[OPSI: بِخَيْرٍ الحَمْدُ للّه (Bikhoirin Alhamdulillah) 🌟 | أَهْلًا وَسَهْلًا (Ahlan wa Sahlan) 👋 | Aku siap belajar 🚀]' }
       ]
     }
   ];
 
-  const [activeTopicId, setActiveTopicId] = useState('trigonometri');
+  const [activeTopicId, setActiveTopicId] = useState('hewan');
   const [activeMode, setActiveMode] = useState('socratic');
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
@@ -315,7 +263,7 @@ const ChatPage = () => {
           </div>
 
           <p className="text-xs text-slate-500 font-bold mb-6 leading-relaxed font-sans">
-            Ini adalah alur penalaran pedagogis Socratic yang digunakan PahamIn untuk membantumu memahami konsep secara mandiri tanpa langsung menyontek jawaban.
+            Ini adalah alur penalaran pedagogis Socratic yang digunakan IfhamKids untuk membantumu memahami kosakata & kaidah bahasa Arab secara mandiri dengan ceria.
           </p>
 
           <div className="space-y-6 relative before:absolute before:left-[17px] before:top-2 before:bottom-2 before:w-[2px] before:bg-slate-100 font-sans">
@@ -338,7 +286,7 @@ const ChatPage = () => {
               <div>
                 <h5 className="text-sm font-black">Tahap 2: Pemberian Pertanyaan Pemantik</h5>
                 <p className="text-xs text-slate-500 font-bold mt-1 leading-relaxed">
-                  Alih-alih memberikan rumus/solusi langsung, AI menyusun pertanyaan bertingkat yang menantang miskonsepsi secara halus.
+                  Alih-alih langsung menyuapkan jawaban arti kata, Kak Ifham menyusun teka-teki dan petunjuk bertingkat yang seru dan mudah dipahami anak SD.
                 </p>
               </div>
             </div>
@@ -350,7 +298,7 @@ const ChatPage = () => {
               <div>
                 <h5 className="text-sm font-black">Tahap 3: Konstruksi Mandiri (Scaffolding)</h5>
                 <p className="text-xs text-slate-500 font-bold mt-1 leading-relaxed">
-                  Siswa dibimbing untuk menyatukan potongan petunjuk dan menarik kesimpulan matematis/sains secara logis.
+                  Santri cilik dibimbing untuk menyatukan petunjuk makna, harakat, dan bunyi makhraj sehingga menemukan arti kata secara mandiri.
                 </p>
               </div>
             </div>
@@ -402,51 +350,150 @@ const ChatPage = () => {
     setSidebarOpen(false);
   };
 
-  // Helper for generating client-side dummy Socratic responses when server/API is unreachable
+  // Helper for parsing quick options from assistant messages
+  const extractOptions = (content) => {
+    if (!content) return { cleanText: '', options: [] };
+    const match = content.match(/\[OPSI:\s*(.*?)\]/is);
+    if (!match) return { cleanText: content, options: [] };
+    const cleanText = content.replace(/\[OPSI:\s*(.*?)\]/is, '').trim();
+    const options = match[1].split('|').map(o => o.trim()).filter(Boolean);
+    return { cleanText, options };
+  };
+
+  // Helper for generating client-side dummy Socratic responses for kids Arabic learning
   const generateClientSocraticDummyResponse = (message, mode, topicId, msgCount) => {
     const msgLower = (message || '').toLowerCase();
-    const currentTopic = topicSessions.find(t => t.id === topicId)?.name || 'Trigonometri';
+    const currentTopic = topicSessions.find(t => t.id === topicId)?.name || 'Hewan Ceria';
 
     if (msgLower.includes('ringkasan') || msgLower.includes('rangkuman')) {
-      return `Berikut ringkasan singkat hasil diskusi kita tentang **${currentTopic}**:\n\n1. **Konsep Dasar**: Pemahaman intuitif tentang prinsip dasar ${currentTopic}.\n2. **Penerapan**: Menghubungkan variabel & rumus ke dalam kasus sederhana.\n3. **Kesimpulan**: Kamu dapat memecahkan masalah secara mandiri dengan langkah yang sistematis.\n\nApakah ada poin ringkasan yang ingin kamu dalami lagi?`;
+      return `🌟 **Rangkuman Belajar Bersama Kak Ifham** 🌟\n\nAlhamdulillah! Kosakata yang sudah kita kuasai tentang **${currentTopic}**:\n\n1. **قِطٌّ** (*Qit-thun*) = Kucing 🐱\n2. **أَسَدٌ** (*Asadun*) = Singa Si Raja Hutan 🦁\n3. **فِيلٌ** (*Fiilun*) = Gajah Belalai Panjang 🐘\n\nKamu hebat dan cepat paham! Coba klik tombol suara 🔊 untuk melafalkannya kembali ya.\n\n[OPSI: Tebak hewan lain lagi! 🦁 | Ulangi suara pelafalan 🔊 | Ganti materi sekolah 🎒]`;
     }
 
     if (msgLower.includes('latihan') || msgLower.includes('soal')) {
-      return `Ini dia latihan soal interaktif untuk **${currentTopic}**:\n\n**Soal**: Sebuah segitiga siku-siku memiliki panjang alas 6 cm dan tinggi 8 cm. Berapakah panjang sisi miring (hipotenusa) tersebut?\n\n*Petunjuk*: Gunakan teorema Phytagoras $a^2 + b^2 = c^2$. Tuliskan jawaban & langkahmu ya!`;
+      return `🎯 **Kuis Teka-Teki Seru Kak Ifham!** 🎯\n\nHewan ini punya belalai panjang, telinganya lebar seperti kipas, dan badannya besar sekali 🐘. Bahasa Arabnya apa ya?\n\n[OPSI: A. فِيلٌ (Fiilun) 🐘 | B. قِطٌّ (Qit-thun) 🐱 | C. Butuh petunjuk 💡]`;
     }
 
-    if (msgLower.includes('mekanisme') || (msgLower.includes('bagaimana') && msgLower.includes('diskusi'))) {
-      return `Mekanisme diskusi ini menggunakan metode **Sokrates (Socratic)**:\n- Aku tidak akan langsung memberikan jawaban instan.\n- Aku akan memberikan pertanyaan pemantik secara bertahap agar kamu bisa menemukan jawabannya sendiri.\n- Diskusi berlangsung interaktif sampai kamu benar-benar paham!`;
+    if (msgLower.includes('petunjuk') || msgLower.includes('clue') || msgLower.includes('bantuan')) {
+      return `💡 **Petunjuk Rahasia dari Kak Ifham:**\nHewan ini bunyinya "Meoong..." suka tidur di pangkuan dan suka makan ikan! Huruf depannya **Qoof** (ق).\n\n[OPSI: A. قِطٌّ (Qit-thun) 🐱 | B. كَلْبٌ (Kalbun) 🐶 | C. طَائِرٌ (Thoo-irun) 🐦]`;
+    }
+
+    if (msgLower.includes('fiilun') || msgLower.includes('gajah') || msgLower.includes('a.')) {
+      return `🌟 **Mumtaz! Hebat sekali!** 🌟\n\nJawabanmu tepat 100%! Gajah dalam bahasa Arab adalah **فِيلٌ** (*Fiilun*). Kamu dapat 1 bintang tambahan! ⭐\n\nSekarang coba tebak: Kalau hewan yang bisa terbang tinggi di langit dan berkicau merdu 🐦, apa ya bahasa Arabnya?\n\n[OPSI: A. طَائِرٌ (Thoo-irun) 🐦 | B. سَمَكٌ (Samakun) 🐟 | C. أَسَدٌ (Asadun) 🦁]`;
     }
 
     if (mode === 'guided') {
       const guidedList = [
-        `Bagus sekali! Pada materi **${currentTopic}**, langkah pertamanya adalah mengidentifikasi variabel yang sudah diketahui. Menurutmu, variabel apa yang paling jelas dari pertanyaanmu?`,
-        `Penjelasan yang bagus! Sekarang mari kita lanjutkan ke langkah kedua: substitusi angka ke dalam persamaan dasar. Berapa hasil yang kamu dapatkan?`,
-        `Tepat sekali! Langkahmu sudah sangat sistematis. Yuk kita selesaikan soal ini bersama-sama!`
+        `Ahlan wa sahlan sahabat kecil! 🌟 Hari ini kita pelajari materi **${currentTopic}** pelan-pelan ya. Langkah 1: Coba pilih kata yang paling ingin kamu tahu artinya!\n\n[OPSI: Nama Hewan Liar 🦁 | Nama Hewan Peliharaan 🐱 | Hewan yang Bisa Terbang 🐦]`,
+        `Pilihan yang sangat bagus! Sekarang dengarkan baik-baik suaranya dengan menekan tombol 🔊 di bawah pesan ini, lalu tirukan ya!\n\n[OPSI: Sudah kutirukan Kak! 🔊 | Boleh ulangi sekali lagi? 👂 | Lanjut kata baru 🌟]`,
+        `Mumtaz! Makhraj pelafalanmu semakin fasih dan jelas. Kamu anak yang sangat pintar! ⭐\n\n[OPSI: Coba kata berikutnya 🚀 | Aku mau latihan kuis 🎯 | Buatkan ringkasan 📝]`
       ];
       return guidedList[msgCount % guidedList.length];
     }
 
     if (mode === 'latihan') {
       if (msgLower.includes('siap') || msgLower.includes('mulai')) {
-        return `Siap! Mari kita mulai latihan soal **${currentTopic}**:\n\n**Soal 1**: Jika nilai $\\sin(\\theta) = \\frac{1}{2}$, berapakah besar sudut $\\theta$ di kuadran pertama?\n\nA. $30^\\circ$\nB. $45^\\circ$\nC. $60^\\circ$\nD. $90^\\circ$\n\nJawab dengan menyebutkan huruf pilihanmu ya!`;
+        return `Bismillah, yuk kita mulai kuis teka-teki **${currentTopic}**! 🎯\n\n**Soal 1**: Di dalam kelas ada benda untuk menulis di buku. Bahasa Arabnya **قَلَمٌ** (*Qolamun*). Artinya apa ya?\n\n[OPSI: A. Pena / Pulpen ✏️ | B. Papan Tulis 📋 | C. Penghapus 🧼]`;
       }
-      return `Jawabanmu luar biasa! 🎯 Penalaranmu sangat tepat untuk materi **${currentTopic}**. Apakah kamu ingin mencoba soal selanjutnya?`;
+      return `Allahu Akbar, pintar sekali! 🎯 Penalaranmu sangat tepat untuk **${currentTopic}**. Kamu dapat bintang prestasi! ⭐\n\n[OPSI: Lanjut soal berikutnya! 🚀 | Dengarkan lafalnya 🔊 | Coba tebak kata lain 💡]`;
     }
 
     const socraticList = [
-      `Pertanyaan yang sangat bagus tentang **${currentTopic}**! Sebelum kita melangkah lebih jauh, menurutmu apa hubungan utama antara pertanyaanmu ini dengan konsep dasar yang pernah kamu pelajari sebelumnya?`,
-      `Analisis yang mantap! Nah, jika nilai variabel pada kasusmu tersebut kita naikkan menjadi dua kali lipat, menurutmu bagaimana pengaruhnya terhadap nilai akhirnya?`,
-      `Tepat sekali! Langkah berfikirmu sangat logis. Coba sekarang kaitkan dengan prinsip utama dari **${currentTopic}**.`,
-      `Luar biasa! Kamu berhasil menemukan jawabannya secara mandiri. Berdasarkan diskusi kita tadi, coba buat ringkasan pemahamanmu sendiri ya! 🌟`
+      `Assalamu'alaikum sahabat ceria! 🌟 Hari ini Kak Ifham temani kamu belajar tentang **${currentTopic}**. Coba lihat sekelilingmu, hewan apa yang paling sering kamu temui di rumah?\n\n[OPSI: Kucing manis 🐱 | Burung berkicau 🐦 | Ikan di kolam 🐟]`,
+      `Wah seru sekali! Hewan itu dalam bahasa Arab ada sebutannya yang sangat indah. Coba klik tombol suara 🔊 untuk mendengar lafalnya ya!\n\n[OPSI: Mau dengar suaranya 🔊 | Tebak kata berikutnya! 🚀 | Minta petunjuk 💡]`,
+      `Mumtaz! Kamu anak cerdas yang cepat memahami kata Arab. Coba kita rangkai menjadi kalimat sederhana ya!\n\n[OPSI: Siap Kak Ifham! 🌟 | Bagaimana caranya? 🤔 | Buka materi lainnya 📚]`,
+      `Luar biasa jagoan! Kamu sudah menyelesaikan sesi diskusi dengan sangat baik. Coba simpulkan kata baru apa saja yang kamu pelajari hari ini! 🌟\n\n[OPSI: Ya, buatkan ringkasan! 📝 | Lanjut petualangan baru 🗺️ | Coba kuis seru 🎯]`
     ];
 
     let resp = socraticList[(msgCount - 1) % socraticList.length] || socraticList[0];
-    if (msgCount >= 4) {
-      resp += "\n\nBerdasarkan diskusi kita, coba simpulkan pemahamanmu sendiri ya!";
-    }
     return resp;
+  };
+
+  // Speak handler using Web Speech API
+  const handleSpeak = (text, index) => {
+    if (activeSpeakingIndex === index) {
+      speechService.stop();
+      setActiveSpeakingIndex(null);
+      return;
+    }
+
+    const { cleanText } = extractOptions(text);
+    setActiveSpeakingIndex(index);
+    speechService.speak(cleanText, {
+      onEnd: () => setActiveSpeakingIndex(null)
+    });
+  };
+
+  // Voice Input (Speech-to-Text) handler
+  const handleVoiceInput = () => {
+    if (isListening) {
+      speechService.stopListening();
+      setIsListening(false);
+      return;
+    }
+
+    if (!speechService.isRecognitionSupported()) {
+      setToastMessage('Browser tidak mendukung mikrofon Speech-to-Text.');
+      setTimeout(() => setToastMessage(''), 3000);
+      return;
+    }
+
+    setIsListening(true);
+    speechService.startListening({
+      lang: 'id-ID',
+      onResult: (transcript) => {
+        setInput(transcript);
+        setIsListening(false);
+      },
+      onError: () => setIsListening(false),
+      onEnd: () => setIsListening(false)
+    });
+  };
+
+  // Send an option directly when clicking quick pill
+  const handleSendOption = (optionText) => {
+    if (loading) return;
+    sendMessageDirect(optionText);
+  };
+
+  const sendMessageDirect = async (userMessage) => {
+    setInput('');
+    const newMessages = [...messages, { role: 'user', content: userMessage }];
+    setMessages(newMessages);
+    setLoading(true);
+
+    const userMsgCount = newMessages.filter(m => m.role === 'user').length;
+
+    try {
+      const token = localStorage.getItem('token');
+      const reqData = {
+        message: userMessage,
+        sessionId: sessionId,
+        mode: activeMode,
+        topic: topicSessions.find(t => t.id === activeTopicId)?.name || 'Hewan Ceria'
+      };
+
+      if (!sessionId) {
+        const initialHistory = getInitialHistory(activeTopicId, activeMode);
+        reqData.seedHistory = initialHistory;
+      }
+
+      const res = await axios.post(`${API_URL}/message`, reqData, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      setMessages(prev => [...prev, { role: 'assistant', content: res.data.response }]);
+      if (!sessionId) {
+        setSessionId(res.data.sessionId);
+        localStorage.setItem(`sessionId_${activeTopicId}_${activeMode}`, res.data.sessionId);
+      }
+    } catch (err) {
+      const dummyResponse = generateClientSocraticDummyResponse(userMessage, activeMode, activeTopicId, userMsgCount);
+      setTimeout(() => {
+        setMessages(prev => [...prev, { role: 'assistant', content: dummyResponse }]);
+      }, 500);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleSend = async (e) => {
@@ -570,8 +617,10 @@ const ChatPage = () => {
                           : 'border-slate-200 text-[#1E3A5F] hover:bg-slate-50 bg-white'
                       }`}
                     >
-                      <img src={assetChat} alt="Chat" className="w-[18px] h-[18px] object-contain" />
-                      <span>{sess.name}</span>
+                      <div className="w-6 h-6 rounded-lg bg-teal-50 flex items-center justify-center text-sm shrink-0">
+                        {sess.icon || '📚'}
+                      </div>
+                      <span className="truncate">{sess.name}</span>
                     </button>
                   );
                 })}
@@ -773,6 +822,9 @@ const ChatPage = () => {
               <AnimatePresence initial={false}>
                 {messages.map((msg, i) => {
                   const isUser = msg.role === 'user';
+                  const { cleanText, options } = extractOptions(msg.content);
+                  const isSpeaking = activeSpeakingIndex === i;
+
                   return (
                     <motion.div
                       key={i}
@@ -781,18 +833,78 @@ const ChatPage = () => {
                       transition={{ duration: 0.4 }}
                       className={`flex w-full ${isUser ? 'justify-end' : 'justify-start'}`}
                     >
-                      <div className={`flex max-w-[85%] gap-4 ${isUser ? 'flex-row-reverse' : ''}`}>
+                      <div className={`flex max-w-[85%] sm:max-w-[78%] gap-3.5 ${isUser ? 'flex-row-reverse' : ''}`}>
                         
                         {/* Avatar Image */}
-                        <img 
-                          src={isUser ? iconPerson : iconAIPahamin} 
-                          alt={isUser ? "User" : "PahamIn"} 
-                          className="w-10 h-10 rounded-full flex-shrink-0 shadow-sm object-cover" 
-                        />
+                        <div className="relative shrink-0">
+                          <img 
+                            src={isUser ? iconPerson : iconAIKakIfham} 
+                            alt={isUser ? "User" : "Kak Ifham"} 
+                            className="w-10 h-10 rounded-full shadow-sm object-cover border-2 border-white" 
+                          />
+                          {!isUser && (
+                            <span className="absolute -bottom-1 -right-1 bg-[#00B4B4] text-white text-[9px] font-black rounded-full w-4 h-4 flex items-center justify-center shadow-xs">
+                              ⭐
+                            </span>
+                          )}
+                        </div>
 
                         {/* Speech Bubble Box */}
-                        <div className="p-4.5 rounded-2xl bg-white text-[#1E3A5F] shadow-sm border border-slate-100/50 leading-relaxed font-semibold text-left">
-                          <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
+                        <div className={`p-4 sm:p-5 rounded-2xl shadow-sm border leading-relaxed font-semibold text-left transition-all ${
+                          isUser 
+                            ? 'bg-[#1E3A5F] text-white border-navy/20' 
+                            : 'bg-white text-[#1E3A5F] border-slate-100/80'
+                        }`}>
+                          
+                          {/* Message Text */}
+                          <div className="text-sm whitespace-pre-wrap font-sans">
+                            {cleanText}
+                          </div>
+
+                          {/* Sound Audio Button for AI Messages */}
+                          {!isUser && (
+                            <div className="mt-3 flex items-center gap-2 pt-2 border-t border-slate-100/80">
+                              <button
+                                type="button"
+                                onClick={() => handleSpeak(cleanText, i)}
+                                className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black transition-all cursor-pointer shadow-xs ${
+                                  isSpeaking 
+                                    ? 'bg-[#FFCA28] text-[#1E3A5F] animate-pulse' 
+                                    : 'bg-[#EAF9F9] hover:bg-[#d6f4f4] text-[#00B4B4]'
+                                }`}
+                              >
+                                {isSpeaking ? <VolumeX size={13} /> : <Volume2 size={13} />}
+                                <span>{isSpeaking ? 'Berhenti Bicara ⏹️' : 'Dengarkan Suara 🔊'}</span>
+                              </button>
+
+                              <span className="text-[10px] text-slate-400 font-bold hidden sm:inline">
+                                • Dengarkan makhraj & harakat
+                              </span>
+                            </div>
+                          )}
+
+                          {/* Interactive Quick Answer Option Pills */}
+                          {!isUser && options && options.length > 0 && (
+                            <div className="mt-3.5 pt-2.5 border-t border-slate-100">
+                              <p className="text-[11px] font-black text-slate-400 uppercase tracking-wider mb-2">
+                                💡 Klik salah satu jawaban:
+                              </p>
+                              <div className="flex flex-wrap gap-2">
+                                {options.map((opt, optIdx) => (
+                                  <button
+                                    key={optIdx}
+                                    type="button"
+                                    onClick={() => handleSendOption(opt)}
+                                    disabled={loading}
+                                    className="bg-white hover:bg-[#EAF9F9] border-2 border-[#00B4B4] text-[#00B4B4] hover:text-[#009b9b] font-black text-xs px-3.5 py-1.5 rounded-full shadow-xs transform hover:scale-[1.03] active:scale-95 transition-all text-left cursor-pointer"
+                                  >
+                                    {opt}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+
                         </div>
 
                       </div>
@@ -809,13 +921,13 @@ const ChatPage = () => {
                 >
                   <div className="flex gap-4 max-w-[85%]">
                     <img 
-                      src={iconAIPahamin} 
-                      alt="PahamIn" 
+                      src={iconAIKakIfham} 
+                      alt="Kak Ifham" 
                       className="w-10 h-10 rounded-full flex-shrink-0 shadow-sm object-cover" 
                     />
                     <div className="bg-white border border-slate-100 p-4.5 rounded-2xl shadow-sm flex items-center gap-3">
                       <Loader2 size={16} className="animate-spin text-[#00B4B4]" />
-                      <span className="text-sm text-slate-400 italic font-semibold">PahamIn sedang berpikir...</span>
+                      <span className="text-sm text-slate-400 italic font-semibold">Kak Ifham sedang menyiapkan teka-teki... 🌟</span>
                     </div>
                   </div>
                 </motion.div>
@@ -830,7 +942,7 @@ const ChatPage = () => {
               onSubmit={handleSend}
               className="max-w-4xl mx-auto relative flex items-center"
             >
-              <div className="w-full bg-white border border-slate-200 shadow-sm rounded-2xl flex items-center px-4 py-3 gap-3">
+              <div className="w-full bg-white border border-slate-200 shadow-sm rounded-2xl flex items-center px-4 py-3 gap-2.5">
                 <input 
                   type="file" 
                   ref={fileInputRef} 
@@ -875,7 +987,7 @@ const ChatPage = () => {
                             className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl hover:bg-slate-50 transition-colors text-left"
                           >
                             <UploadCloud size={16} className="text-[#00B4B4]" />
-                            <span>Upload Dokumen</span>
+                            <span>Upload Gambar / Teks</span>
                           </button>
 
                           <button
@@ -887,7 +999,7 @@ const ChatPage = () => {
                             className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl hover:bg-slate-50 transition-colors text-left"
                           >
                             <FolderOpen size={16} className="text-[#00B4B4]" />
-                            <span>Pilih dari Library</span>
+                            <span>Buka Perpustakaan Kosakata</span>
                           </button>
 
                           <button
@@ -899,7 +1011,7 @@ const ChatPage = () => {
                             className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl hover:bg-slate-50 transition-colors text-left"
                           >
                             <Brain size={16} className="text-[#00B4B4]" />
-                            <span>Lihat Thinking Trace</span>
+                            <span>Alur Berpikir Sokrates</span>
                           </button>
 
                           <div className="h-px bg-slate-100 my-1" />
@@ -910,7 +1022,7 @@ const ChatPage = () => {
                             className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl hover:bg-slate-50 transition-colors text-left"
                           >
                             <ClipboardList size={16} className="text-[#00B4B4]" />
-                            <span>Buat Latihan Soal</span>
+                            <span>Minta Soal Kuis Teka-Teki</span>
                           </button>
 
                           <button
@@ -919,7 +1031,7 @@ const ChatPage = () => {
                             className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl hover:bg-slate-50 transition-colors text-left"
                           >
                             <FileText size={16} className="text-[#00B4B4]" />
-                            <span>Buat Ringkasan</span>
+                            <span>Rangkum Kosakata Hari Ini</span>
                           </button>
                         </motion.div>
                       </>
@@ -932,22 +1044,36 @@ const ChatPage = () => {
                   ref={chatInputRef}
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
-                  placeholder="Tanyakan sesuatu pada Pahamin..."
+                  placeholder={isListening ? "Mendengarkan suaramu... Bicara sekarang!" : "Tulis jawabanmu atau klik tombol di atas..."}
                   className="flex-1 bg-transparent text-[#1E3A5F] placeholder-slate-400 focus:outline-none font-semibold text-sm"
                   disabled={loading}
                 />
+
+                {/* Microphone Button (Speech Recognition) */}
+                <button
+                  type="button"
+                  onClick={handleVoiceInput}
+                  title={isListening ? "Sedang mendengarkan... Klik untuk berhenti" : "Bicara dengan suara 🎙️"}
+                  className={`p-2.5 rounded-xl transition-all flex items-center justify-center shrink-0 ${
+                    isListening 
+                      ? 'bg-red-500 text-white animate-pulse shadow-md' 
+                      : 'bg-slate-100 hover:bg-slate-200 text-slate-600'
+                  }`}
+                >
+                  {isListening ? <MicOff size={16} /> : <Mic size={16} />}
+                </button>
                 
                 <button 
                   type="submit"
                   disabled={loading || !input.trim()}
-                  className="p-2.5 bg-[#00B4B4] text-white rounded-xl hover:bg-[#009b9b] transition-all disabled:opacity-50 disabled:hover:bg-[#00B4B4] flex items-center justify-center flex-shrink-0"
+                  className="p-2.5 bg-[#00B4B4] text-white rounded-xl hover:bg-[#009b9b] transition-all disabled:opacity-50 disabled:hover:bg-[#00B4B4] flex items-center justify-center flex-shrink-0 cursor-pointer"
                 >
                   <Send size={16} />
                 </button>
               </div>
             </form>
-            <p className="text-center text-[10px] text-slate-400 font-bold mt-3">
-              AI Pahamin dapat melakukan kesalahan. Tetaplah kritis dan simpulkan pemahamanmu sendiri.
+            <p className="text-center text-[10px] text-slate-400 font-bold mt-2.5">
+              💡 Tips: Klik tombol speaker 🔊 untuk mendengar lafal kata Arab yang fasih dan benar!
             </p>
           </div>
 

@@ -292,22 +292,26 @@ const ProgressPage = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 {/* Recommendation 1 */}
                 <div className="border border-slate-200 bg-white rounded-[20px] p-5 flex items-center gap-4 hover:shadow-md transition-all duration-300 cursor-pointer">
-                  <img src={imgSaran1} alt="Genetika Dasar" className="w-[64px] h-[64px] object-contain shrink-0" />
+                  <div className="w-[64px] h-[64px] rounded-2xl bg-teal-50 flex items-center justify-center text-3xl shrink-0 border border-teal-100">
+                    👨‍👩‍👧
+                  </div>
                   <div className="min-w-0">
-                    <h4 className="text-[15px] font-black text-[#1E3A5F] leading-tight">Genetika Dasar</h4>
+                    <h4 className="text-[15px] font-black text-[#1E3A5F] leading-tight">Keluarga & Rumah (الأُسْرَةُ)</h4>
                     <p className="text-[11px] text-slate-500 font-bold mt-1 leading-relaxed">
-                      Pahami konsep dasar genetika dan pewarisan sifat.
+                      Pahami kosakata ayah, ibu, saudara, dan sapaan bahasa Arab.
                     </p>
                   </div>
                 </div>
 
                 {/* Recommendation 2 */}
                 <div className="border border-slate-200 bg-white rounded-[20px] p-5 flex items-center gap-4 hover:shadow-md transition-all duration-300 cursor-pointer">
-                  <img src={imgSaran2} alt="Fungsi Kuadrat" className="w-[64px] h-[64px] object-contain shrink-0" />
+                  <div className="w-[64px] h-[64px] rounded-2xl bg-indigo-50 flex items-center justify-center text-3xl shrink-0 border border-indigo-100">
+                    🔢
+                  </div>
                   <div className="min-w-0">
-                    <h4 className="text-[15px] font-black text-[#1E3A5F] leading-tight">Fungsi Kuadrat</h4>
+                    <h4 className="text-[15px] font-black text-[#1E3A5F] leading-tight">Angka & Berhitung (الأَرْقَامُ)</h4>
                     <p className="text-[11px] text-slate-500 font-bold mt-1 leading-relaxed">
-                      Belajar grafik, akar, dan penerapan fungsi kuadrat.
+                      Mengenal angka 1-10 dan teka-teki berhitung ceria bersama Kak Ifham.
                     </p>
                   </div>
                 </div>
@@ -468,9 +472,9 @@ const ProgressPage = () => {
                     <div className="text-left">
                       <span className="text-xs text-slate-400 font-bold block">Fokus minggu ini</span>
                       <span className="text-[13px] font-black text-[#1E3A5F] mt-0.5 block max-w-[120px] truncate leading-tight">
-                        Kimia & Fisika
+                        Mufrodat & Makhraj
                       </span>
-                      <span className="text-[10px] text-slate-400 font-semibold block">Pendalaman konsep</span>
+                      <span className="text-[10px] text-slate-400 font-semibold block">Pendalaman kosakata</span>
                     </div>
                   </div>
                 </div>
@@ -504,8 +508,8 @@ const ProgressPage = () => {
                   <div className="flex items-center gap-4">
                     <img src={imgExplorer} alt="Explorer" className="w-[60px] h-[60px] object-contain shrink-0" />
                     <div className="min-w-0">
-                      <h4 className="text-base font-black text-[#1E3A5F]">Tingkatkan di Fisika</h4>
-                      <p className="text-sm text-slate-500 font-bold mt-0.5 leading-snug">Coba pelajari lebih banyak topik.</p>
+                      <h4 className="text-base font-black text-[#1E3A5F]">Tingkatkan di Benda Kelasku</h4>
+                      <p className="text-sm text-slate-500 font-bold mt-0.5 leading-snug">Coba pelajari lebih banyak mufrodat kelas.</p>
                     </div>
                   </div>
                   <div className="mt-4 text-center">

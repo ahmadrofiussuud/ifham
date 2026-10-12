@@ -12,7 +12,7 @@ const Logo = ({ size = 'normal', showText = true, className = '' }) => {
 
   return (
     <div className={`flex items-center gap-3 ${className}`}>
-      {/* SVG Icon Logo PahamIn */}
+      {/* SVG Icon Logo IfhamKids */}
       <svg
         height={height}
         viewBox="0 0 100 80"
@@ -71,15 +71,15 @@ const Logo = ({ size = 'normal', showText = true, className = '' }) => {
         <circle cx="68" cy="43" r="3.5" fill="#00B4B4" />
       </svg>
 
-      {/* Text Logo: PahamIn */}
+      {/* Text Logo: IfhamKids */}
       {showText && (
         <span
           className={`font-extrabold tracking-tight select-none ${
             size === 'small' ? 'text-lg' : size === 'large' ? 'text-3xl' : 'text-2xl'
           }`}
         >
-          <span className="text-[#1E3A5F]">Paham</span>
-          <span className="text-[#00B4B4]">In</span>
+          <span className="text-[#1E3A5F]">Ifham</span>
+          <span className="text-[#00B4B4]">Kids</span>
         </span>
       )}
     </div>

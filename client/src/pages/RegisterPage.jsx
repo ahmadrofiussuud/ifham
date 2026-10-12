@@ -88,7 +88,7 @@ const RegisterPage = () => {
         
         {/* LEFT COLUMN: BRANDING & ILLUSTRATION */}
         <div className="lg:col-span-6 flex flex-col justify-between h-full py-4 relative">
-          {/* Logo PahamIn in Top Left */}
+          {/* Logo IfhamKids in Top Left */}
           <div className="mb-10">
             <Logo size="normal" />
           </div>
@@ -148,7 +148,7 @@ const RegisterPage = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
               src={heroImg} 
-              alt="PahamIn Student" 
+              alt="IfhamKids Student" 
               className="w-[280px] object-contain drop-shadow-2xl z-10 relative bottom-0 pointer-events-none"
             />
 
@@ -200,9 +200,9 @@ const RegisterPage = () => {
           >
             {/* Header Text */}
             <div className="mb-8">
-              <h2 className="text-3xl font-extrabold text-[#1E3A5F] tracking-tight">Gabung PahamIn</h2>
+              <h2 className="text-3xl font-extrabold text-[#1E3A5F] tracking-tight">Gabung IfhamKids</h2>
               <p className="text-slate-500 text-sm font-semibold mt-2">
-                Mulai perjalanan critical thinking-mu sekarang juga!
+                Mulai petualangan belajar bahasa Arab ceriamu sekarang juga!
               </p>
             </div>
 

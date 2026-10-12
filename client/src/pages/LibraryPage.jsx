@@ -20,19 +20,19 @@ const LibraryPage = () => {
   // Search & Filter States
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState(searchParams.get('tab') || 'Semua'); // 'Semua', 'Terbaru', 'Tersimpan'
-  const [selectedCategory, setSelectedCategory] = useState('Semua'); // 'Semua', 'Matematika', 'Biologi', 'Kimia', 'Fisika'
+  const [selectedCategory, setSelectedCategory] = useState('Semua'); // 'Semua', 'Hewan Ceria', 'Di Sekolahku', 'Angka & Warna', 'Buah & Makanan'
   const [activeCollection, setActiveCollection] = useState('Dokumen'); // 'Dokumen', 'Ringkasan', 'Favorit'
 
   // Extract user info
   const displayName = user?.name || "Budi Saputra";
   const firstName = displayName.split(' ')[0];
 
-  // Document List State
+  // Document List State (Arabic Kid Learning Materials)
   const [documents, setDocuments] = useState([
-    { id: 1, name: 'materi matematika.pdf', category: 'Matematika', size: '4.8 MB', date: '13 Juni 2026', isFavorite: true, isSaved: true, color: 'bg-[#1E3A5F] text-white' },
-    { id: 2, name: 'materi biologi.pdf', category: 'Biologi', size: '3.8 MB', date: '13 Juni 2026', isFavorite: false, isSaved: false, color: 'bg-[#1E3A5F] text-white' },
-    { id: 3, name: 'materi kimia.pdf', category: 'Kimia', size: '2.7 MB', date: '13 Juni 2026', isFavorite: false, isSaved: false, color: 'bg-[#1E3A5F] text-white' },
-    { id: 4, name: 'materi fisika.pdf', category: 'Fisika', size: '2.7 MB', date: '13 Juni 2026', isFavorite: false, isSaved: false, color: 'bg-[#1E3A5F] text-white' }
+    { id: 1, name: 'Kosakata Hewan Ceria (Al-Hayawaanaat).pdf', category: 'Hewan Ceria', size: '2.4 MB', date: '13 Juni 2026', isFavorite: true, isSaved: true, color: 'bg-[#1E3A5F] text-white' },
+    { id: 2, name: 'Benda di Kelasku (Al-Adawaat).pdf', category: 'Di Sekolahku', size: '1.8 MB', date: '13 Juni 2026', isFavorite: false, isSaved: true, color: 'bg-[#1E3A5F] text-white' },
+    { id: 3, name: 'Angka 1-10 & Warna Warni Ceria.pdf', category: 'Angka & Warna', size: '3.1 MB', date: '13 Juni 2026', isFavorite: true, isSaved: false, color: 'bg-[#1E3A5F] text-white' },
+    { id: 4, name: 'Buah & Makanan Sehat (Al-Fawaakih).pdf', category: 'Buah & Makanan', size: '2.0 MB', date: '13 Juni 2026', isFavorite: false, isSaved: false, color: 'bg-[#1E3A5F] text-white' }
   ]);
 
   // Toggle favorite status
@@ -51,46 +51,28 @@ const LibraryPage = () => {
 
   // Filter & Search Logic
   const filteredDocuments = documents.filter(doc => {
-    // 1. Search Query filter with abbreviation mappings
     const query = searchQuery.toLowerCase().trim();
     let matchesSearch = true;
     
     if (query) {
-      const matchesName = doc.name.toLowerCase().includes(query);
-      const matchesCategory = doc.category.toLowerCase().includes(query);
-      
-      let matchesAbbrev = false;
-      if (query === 'mtk' && doc.category.toLowerCase() === 'matematika') {
-        matchesAbbrev = true;
-      } else if (query === 'bio' && doc.category.toLowerCase() === 'biologi') {
-        matchesAbbrev = true;
-      } else if (query === 'kimia' && doc.category.toLowerCase() === 'kimia') {
-        matchesAbbrev = true;
-      } else if (query === 'fisika' && doc.category.toLowerCase() === 'fisika') {
-        matchesAbbrev = true;
-      }
-      
-      matchesSearch = matchesName || matchesCategory || matchesAbbrev;
+      matchesSearch = doc.name.toLowerCase().includes(query) || doc.category.toLowerCase().includes(query);
     }
     
-    // 2. Tab Filter (Semua, Terbaru, Tersimpan)
     let matchesTab = true;
     if (activeTab === 'Tersimpan') {
       matchesTab = doc.isSaved;
     }
     
-    // 3. Category Sidebar Filter
     let matchesCategory = true;
     if (selectedCategory !== 'Semua') {
       matchesCategory = doc.category === selectedCategory;
     }
 
-    // 4. Collection Sidebar Filter
     let matchesCollection = true;
     if (activeCollection === 'Favorit') {
       matchesCollection = doc.isFavorite;
     } else if (activeCollection === 'Ringkasan') {
-      matchesCollection = doc.name.toLowerCase().includes('ringkasan');
+      matchesCollection = doc.name.toLowerCase().includes('ringkasan') || doc.name.toLowerCase().includes('kosakata');
     }
 
     return matchesSearch && matchesTab && matchesCategory && matchesCollection;
@@ -99,19 +81,19 @@ const LibraryPage = () => {
   const getCategoryIcon = (catId, isActive) => {
     const colorClass = isActive ? "text-[#00B4B4]" : "text-[#1E3A5F]";
     switch(catId) {
-      case 'Matematika': return <Sigma size={16} className={colorClass} />;
-      case 'Biologi': return <Dna size={16} className={colorClass} />;
-      case 'Kimia': return <FlaskConical size={16} className={colorClass} />;
-      case 'Fisika': return <Atom size={16} className={colorClass} />;
+      case 'Hewan Ceria': return <span className="text-base">🦁</span>;
+      case 'Di Sekolahku': return <span className="text-base">🎒</span>;
+      case 'Angka & Warna': return <span className="text-base">🎨</span>;
+      case 'Buah & Makanan': return <span className="text-base">🍎</span>;
       default: return <BookOpen size={16} className={colorClass} />;
     }
   };
 
   const getCollectionIcon = (colId, isActive) => {
-    const colorClass = isActive ? "text-[#00B4B4]" : "text-[#1E3A5F]";
+    const colorClass = isActive ? "text-[#00B4B4]" : "text-slate-400";
     switch(colId) {
-      case 'Dokumen': return <Folder size={16} className={colorClass} />;
-      case 'Ringkasan': return <FileText size={16} className={colorClass} />;
+      case 'Dokumen': return <FileText size={16} className={colorClass} />;
+      case 'Ringkasan': return <Bookmark size={16} className={colorClass} />;
       case 'Favorit': return <Star size={16} className={colorClass} fill={isActive ? "currentColor" : "none"} />;
       default: return <Folder size={16} className={colorClass} />;
     }
@@ -283,7 +265,7 @@ const LibraryPage = () => {
                       <div className="mb-4">
                         <label className="text-[11px] text-slate-400 font-extrabold uppercase tracking-wider block mb-2">Kategori</label>
                         <div className="grid grid-cols-2 gap-1.5">
-                          {['Semua', 'Matematika', 'Biologi', 'Kimia', 'Fisika'].map(cat => (
+                          {['Semua', 'Hewan Ceria', 'Di Sekolahku', 'Angka & Warna', 'Buah & Makanan'].map(cat => (
                             <button
                               key={cat}
                               onClick={() => setSelectedCategory(cat)}
@@ -339,11 +321,11 @@ const LibraryPage = () => {
               </div>
               <div className="space-y-2.5">
                 {[
-                  { id: 'Semua', name: 'Semua Kategori' },
-                  { id: 'Matematika', name: 'Matematika' },
-                  { id: 'Biologi', name: 'Biologi' },
-                  { id: 'Kimia', name: 'Kimia' },
-                  { id: 'Fisika', name: 'Fisika' }
+                  { id: 'Semua', name: 'Semua Materi' },
+                  { id: 'Hewan Ceria', name: 'Hewan Ceria' },
+                  { id: 'Di Sekolahku', name: 'Di Sekolahku' },
+                  { id: 'Angka & Warna', name: 'Angka & Warna' },
+                  { id: 'Buah & Makanan', name: 'Buah & Makanan' }
                 ].map(cat => {
                   const isActive = selectedCategory === cat.id;
                   return (

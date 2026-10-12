@@ -97,8 +97,12 @@ const Dashboard = () => {
         
         {/* Welcoming Header */}
         <div className="mb-10 text-left">
+          <div className="inline-flex items-center gap-2 bg-[#EAF9F9] border border-[#00B4B4]/30 px-3.5 py-1 rounded-full mb-3 text-xs font-black text-[#00B4B4]">
+            <span>🐪</span>
+            <span>Ifham Kids • Sahabat Belajar Bahasa Arab</span>
+          </div>
           <h1 className="text-3xl lg:text-4xl font-extrabold text-[#1E3A5F] tracking-tight">
-            Halo <span className="text-[#00B4B4]">{firstName}!</span>, mau belajar apa hari ini?
+            Ahlan wa Sahlan, <span className="text-[#00B4B4]">{firstName}!</span> 🌟 Mau berpetualang apa hari ini?
           </h1>
         </div>
 
@@ -109,32 +113,32 @@ const Dashboard = () => {
           <div className="bg-[#D4E6FF] rounded-[24px] p-6 flex items-center gap-6 border border-[#c0dbff] relative overflow-hidden transition-all duration-300 hover:shadow-lg">
             <img src={imgMulaiDiskusi} alt="Mulai Diskusi" className="w-[110px] h-[110px] object-contain shrink-0" />
             <div className="flex flex-col text-left">
-              <h3 className="text-[21px] font-extrabold text-[#1E3A5F] leading-tight">Mulai Diskusi</h3>
+              <h3 className="text-[21px] font-extrabold text-[#1E3A5F] leading-tight">Mulai Petualangan</h3>
               <p className="text-slate-600 text-[13.5px] font-bold mt-1.5 leading-relaxed max-w-[210px]">
-                Tanyakan apa saja dan pahami konsepnya.
+                Pecahkan teka-teki kosakata seru bersama Kak Ifham.
               </p>
               <Link 
                 to="/chat" 
                 className="mt-4 bg-[#1E3A5F] hover:bg-[#152a46] text-white px-5 py-2.5 rounded-xl text-xs font-black text-center transition-all inline-block w-fit"
               >
-                Mulai chat ➔
+                Mulai Chat ➔
               </Link>
             </div>
           </div>
 
-          {/* Card 2: Upload Materi */}
+          {/* Card 2: Latihan Suara */}
           <div className="bg-[#BDE3F5] rounded-[24px] p-6 flex items-center gap-6 border border-[#a2d4ef] relative overflow-hidden transition-all duration-300 hover:shadow-lg">
-            <img src={imgUploadMateri} alt="Upload Materi" className="w-[110px] h-[110px] object-contain shrink-0" />
+            <img src={imgUploadMateri} alt="Latihan Suara" className="w-[110px] h-[110px] object-contain shrink-0" />
             <div className="flex flex-col text-left">
-              <h3 className="text-[21px] font-extrabold text-[#1E3A5F] leading-tight">Upload Materi</h3>
+              <h3 className="text-[21px] font-extrabold text-[#1E3A5F] leading-tight">Suara & Makhraj</h3>
               <p className="text-slate-600 text-[13.5px] font-bold mt-1.5 leading-relaxed max-w-[210px]">
-                Unggah dokumen atau gambar untuk dianalisis.
+                Dengarkan lafal kata Arab berharakat dengan audio jernih.
               </p>
               <Link 
                 to="/chat" 
                 className="mt-4 bg-[#00B4B4] hover:bg-[#009c9c] text-white px-5 py-2.5 rounded-xl text-xs font-black transition-all w-fit text-center block"
               >
-                Upload Sekarang ➔
+                Latihan Suara ➔
               </Link>
             </div>
           </div>
@@ -143,15 +147,15 @@ const Dashboard = () => {
           <div className="bg-[#D4E6FF] rounded-[24px] p-6 flex items-center gap-6 border border-[#c0dbff] relative overflow-hidden transition-all duration-300 hover:shadow-lg">
             <img src={imgLanjutkanBelajar} alt="Lanjutkan belajar" className="w-[110px] h-[110px] object-contain shrink-0" />
             <div className="flex flex-col text-left">
-              <h3 className="text-[21px] font-extrabold text-[#1E3A5F] leading-tight">Lanjutkan belajar</h3>
+              <h3 className="text-[21px] font-extrabold text-[#1E3A5F] leading-tight">Lanjutkan Belajar</h3>
               <p className="text-slate-600 text-[13.5px] font-bold mt-1.5 leading-relaxed max-w-[210px]">
-                Lanjutkan materi yang sudah kamu pelajari.
+                Lanjutkan topik hewan, angka, dan benda di sekolahmu.
               </p>
               <Link 
                 to="/chat" 
                 className="mt-4 bg-[#1E3A5F] hover:bg-[#152a46] text-white px-5 py-2.5 rounded-xl text-xs font-black transition-all w-fit text-center block"
               >
-                Lihat Lanjutan ➔
+                Lanjut Belajar ➔
               </Link>
             </div>
           </div>
@@ -165,7 +169,7 @@ const Dashboard = () => {
           <div className="bg-white rounded-[24px] shadow-sm border border-slate-100 p-6 sm:p-8 flex flex-col text-left justify-between min-h-[400px]">
             <div className="flex-1 flex flex-col">
               <div className="flex justify-between items-center mb-6">
-                <h3 className="text-lg font-black text-[#1E3A5F]">Aktivitas Terbaru</h3>
+                <h3 className="text-lg font-black text-[#1E3A5F]">Aktivitas Terakhir</h3>
                 <Link to="/library?tab=Terbaru" className="text-sm font-extrabold text-[#3B82F6] hover:underline">Lihat semua</Link>
               </div>
 
@@ -174,10 +178,12 @@ const Dashboard = () => {
                 
                 {/* Item 1 */}
                 <div className="flex items-center gap-4">
-                  <img src={imgChat} alt="Chat" className="w-[52px] h-[52px] shrink-0 object-contain" />
+                  <div className="w-[52px] h-[52px] rounded-2xl bg-amber-50 flex items-center justify-center text-2xl shrink-0 border border-amber-100">
+                    🦁
+                  </div>
                   <div className="flex-1 min-w-0">
-                    <h4 className="text-[15px] font-extrabold text-[#1E3A5F] truncate">Diskusi Trigonometri</h4>
-                    <p className="text-xs text-slate-500 font-bold mt-0.5 truncate">Menanyakan soal identitas Trigonometri</p>
+                    <h4 className="text-[15px] font-extrabold text-[#1E3A5F] truncate">Teka-teki Hewan (الحَيَوَانَات)</h4>
+                    <p className="text-xs text-slate-500 font-bold mt-0.5 truncate">Menebak kata Asadun (أَسَدٌ) & Qit-thun (قِطٌّ)</p>
                   </div>
                 </div>
 
@@ -185,10 +191,12 @@ const Dashboard = () => {
 
                 {/* Item 2 */}
                 <div className="flex items-center gap-4">
-                  <img src={imgRingkasanMateri} alt="Document" className="w-[52px] h-[52px] shrink-0 object-contain" />
+                  <div className="w-[52px] h-[52px] rounded-2xl bg-blue-50 flex items-center justify-center text-2xl shrink-0 border border-blue-100">
+                    🎒
+                  </div>
                   <div className="flex-1 min-w-0">
-                    <h4 className="text-[15px] font-extrabold text-[#1E3A5F] truncate">Ringkasan Biologi Bab 2</h4>
-                    <p className="text-xs text-slate-500 font-bold mt-0.5 truncate">Sistem organisme manusia</p>
+                    <h4 className="text-[15px] font-extrabold text-[#1E3A5F] truncate">Benda di Kelasku (الأَدَوَات)</h4>
+                    <p className="text-xs text-slate-500 font-bold mt-0.5 truncate">Mengenal Qolamun (قَلَمٌ) & Kitaabun (كِتَابٌ)</p>
                   </div>
                 </div>
 
@@ -196,10 +204,12 @@ const Dashboard = () => {
 
                 {/* Item 3 */}
                 <div className="flex items-center gap-4">
-                  <img src={imgProgress} alt="Progress" className="w-[52px] h-[52px] shrink-0 object-contain" />
+                  <div className="w-[52px] h-[52px] rounded-2xl bg-teal-50 flex items-center justify-center text-2xl shrink-0 border border-teal-100">
+                    ⭐
+                  </div>
                   <div className="flex-1 min-w-0">
-                    <h4 className="text-[15px] font-extrabold text-[#1E3A5F] truncate">Kuis Sistem Pencernaan</h4>
-                    <p className="text-xs text-slate-500 font-bold mt-0.5 truncate">10 soal | Skor: 80%</p>
+                    <h4 className="text-[15px] font-extrabold text-[#1E3A5F] truncate">Kuis Teka-Teki Ceria</h4>
+                    <p className="text-xs text-slate-500 font-bold mt-0.5 truncate">5 soal tebakan | Skor: 100% Mumtaz!</p>
                   </div>
                 </div>
 
@@ -207,10 +217,12 @@ const Dashboard = () => {
 
                 {/* Item 4 */}
                 <div className="flex items-center gap-4">
-                  <img src={imgUploadMateriIcon} alt="Upload" className="w-[52px] h-[52px] shrink-0 object-contain" />
+                  <div className="w-[52px] h-[52px] rounded-2xl bg-rose-50 flex items-center justify-center text-2xl shrink-0 border border-rose-100">
+                    🔊
+                  </div>
                   <div className="flex-1 min-w-0">
-                    <h4 className="text-[15px] font-extrabold text-[#1E3A5F] truncate">Upload Materi Kimia</h4>
-                    <p className="text-xs text-slate-500 font-bold mt-0.5 truncate">Struktur Atom dan Ikatan Kimia.pdf</p>
+                    <h4 className="text-[15px] font-extrabold text-[#1E3A5F] truncate">Praktik Audio & Makhraj</h4>
+                    <p className="text-xs text-slate-500 font-bold mt-0.5 truncate">Mendengarkan 12 pelafalan kata berharakat</p>
                   </div>
                 </div>
 
@@ -358,44 +370,56 @@ const Dashboard = () => {
         {/* Bottom Section: Rekomendasi Untukmu */}
         <section className="bg-white rounded-[24px] shadow-sm border border-slate-100 p-8 text-left">
           <div className="flex justify-between items-center mb-6">
-            <h3 className="text-lg font-black text-[#1E3A5F]">Rekomendasi Untukmu</h3>
-            <Link to="/progress?section=rekomendasi" className="text-sm font-extrabold text-[#3B82F6] hover:underline">Lihat semua rekomendasi</Link>
+            <div>
+              <h3 className="text-lg font-black text-[#1E3A5F]">Petualangan Seru Selanjutnya 🗺️</h3>
+              <p className="text-xs text-slate-400 font-bold mt-0.5">Pilih topik seru yang ingin kamu jelajahi bersama Kak Ifham</p>
+            </div>
+            <Link to="/library" className="text-sm font-extrabold text-[#00B4B4] hover:underline">Buka Semua Topik</Link>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             
-            {/* Card 1: Genetika Dasar */}
-            <div className="border border-slate-200 bg-white rounded-[20px] p-6 flex items-center gap-5 hover:shadow-md transition-all duration-300 cursor-pointer">
-              <img src={imgSaran1} alt="Genetika Dasar" className="w-[84px] h-[84px] object-contain shrink-0" />
+            {/* Card 1: Hewan Ceria */}
+            <Link to="/chat" className="border-2 border-slate-100 hover:border-[#00B4B4] bg-white rounded-[20px] p-6 flex items-center gap-5 hover:shadow-md transition-all duration-300 cursor-pointer block">
+              <div className="w-[72px] h-[72px] rounded-2xl bg-amber-50 flex items-center justify-center text-4xl shrink-0 border border-amber-200">
+                🦁
+              </div>
               <div className="min-w-0">
-                <h4 className="text-base sm:text-lg font-black text-[#1E3A5F] leading-tight">Genetika Dasar</h4>
-                <p className="text-xs sm:text-[13px] text-slate-500 font-bold mt-1.5 leading-relaxed">
-                  Pahami konsep dasar genetika dan pewarisan sifat.
+                <span className="text-[10px] bg-amber-100 text-amber-800 font-black px-2 py-0.5 rounded-full uppercase">Level 1</span>
+                <h4 className="text-base sm:text-lg font-black text-[#1E3A5F] leading-tight mt-1">Hewan Ceria (الحَيَوَانَات)</h4>
+                <p className="text-xs text-slate-500 font-bold mt-1 leading-relaxed">
+                  Kenali nama singa, gajah, kucing, dan burung dalam bahasa Arab.
                 </p>
               </div>
-            </div>
+            </Link>
 
-            {/* Card 2: Fungsi Kuadrat */}
-            <div className="border border-slate-200 bg-white rounded-[20px] p-6 flex items-center gap-5 hover:shadow-md transition-all duration-300 cursor-pointer">
-              <img src={imgSaran2} alt="Fungsi Kuadrat" className="w-[84px] h-[84px] object-contain shrink-0" />
+            {/* Card 2: Benda di Kelasku */}
+            <Link to="/chat" className="border-2 border-slate-100 hover:border-[#00B4B4] bg-white rounded-[20px] p-6 flex items-center gap-5 hover:shadow-md transition-all duration-300 cursor-pointer block">
+              <div className="w-[72px] h-[72px] rounded-2xl bg-blue-50 flex items-center justify-center text-4xl shrink-0 border border-blue-200">
+                🎒
+              </div>
               <div className="min-w-0">
-                <h4 className="text-base sm:text-lg font-black text-[#1E3A5F] leading-tight">Fungsi Kuadrat</h4>
-                <p className="text-xs sm:text-[13px] text-slate-500 font-bold mt-1.5 leading-relaxed">
-                  Belajar grafik, akar, dan penerapan fungsi kuadrat.
+                <span className="text-[10px] bg-blue-100 text-blue-800 font-black px-2 py-0.5 rounded-full uppercase">Level 2</span>
+                <h4 className="text-base sm:text-lg font-black text-[#1E3A5F] leading-tight mt-1">Di Kelasku (الأَدَوَات)</h4>
+                <p className="text-xs text-slate-500 font-bold mt-1 leading-relaxed">
+                  Pahami kosakata buku, pulpen, tas, penggaris, dan meja kelas.
                 </p>
               </div>
-            </div>
+            </Link>
 
-            {/* Card 3: Stoikiometri */}
-            <div className="border border-slate-200 bg-white rounded-[20px] p-6 flex items-center gap-5 hover:shadow-md transition-all duration-300 cursor-pointer">
-              <img src={imgSaran3} alt="Stoikiometri" className="w-[84px] h-[84px] object-contain shrink-0" />
+            {/* Card 3: Buah & Makanan */}
+            <Link to="/chat" className="border-2 border-slate-100 hover:border-[#00B4B4] bg-white rounded-[20px] p-6 flex items-center gap-5 hover:shadow-md transition-all duration-300 cursor-pointer block">
+              <div className="w-[72px] h-[72px] rounded-2xl bg-rose-50 flex items-center justify-center text-4xl shrink-0 border border-rose-200">
+                🍎
+              </div>
               <div className="min-w-0">
-                <h4 className="text-base sm:text-lg font-black text-[#1E3A5F] leading-tight">Stoikiometri</h4>
-                <p className="text-xs sm:text-[13px] text-slate-500 font-bold mt-1.5 leading-relaxed">
-                  Hitung mol, reaksi kimia, dan perbandingan zat.
+                <span className="text-[10px] bg-rose-100 text-rose-800 font-black px-2 py-0.5 rounded-full uppercase">Level 3</span>
+                <h4 className="text-base sm:text-lg font-black text-[#1E3A5F] leading-tight mt-1">Buah & Makanan (الفَوَاكِه)</h4>
+                <p className="text-xs text-slate-500 font-bold mt-1 leading-relaxed">
+                  Tebak bahasa Arab apel manis, pisang, kurma, dan susu segar.
                 </p>
               </div>
-            </div>
+            </Link>
 
           </div>
         </section>

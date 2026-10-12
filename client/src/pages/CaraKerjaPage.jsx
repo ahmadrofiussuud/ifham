@@ -58,13 +58,13 @@ const CaraKerjaPage = () => {
           className="flex flex-col items-center"
         >
           <span className="bg-[#00B4B4]/10 text-[#00B4B4] font-extrabold text-xs px-4 py-1.5 rounded-full uppercase tracking-wider mb-4">
-            Metode PahamIn
+            Metode IfhamKids
           </span>
           <h1 className="text-4xl md:text-6xl font-black text-[#1E3A5F] leading-tight tracking-tighter max-w-3xl">
-            Bagaimana <span className="text-[#00B4B4]">PahamIn</span> Membantu Belajarmu?
+            Bagaimana <span className="text-[#00B4B4]">IfhamKids</span> Membantu Belajarmu?
           </h1>
           <p className="text-slate-500 font-medium text-base md:text-lg mt-6 max-w-2xl leading-relaxed">
-            PahamIn dirancang menggunakan metode Socratic, melatih pikiranmu untuk memahami konsep secara logis dan mendalam daripada sekadar menghafal jawaban.
+            IfhamKids dirancang menggunakan metode Socratic ramah anak, melatih santri cilik memahami kosakata dan kaidah bahasa Arab secara ceria, logis, dan mendalam.
           </p>
         </motion.div>
       </header>
@@ -120,9 +120,9 @@ const CaraKerjaPage = () => {
                   <span className="text-slate-400 font-semibold text-[10px] mt-1">Maksimal 10MB per dokumen</span>
                 </div>
                 <div className="flex gap-2">
-                  <span className="bg-[#00B4B4]/10 text-[#00B4B4] font-bold text-[10px] px-2.5 py-1 rounded-md">Biologi</span>
-                  <span className="bg-[#00B4B4]/10 text-[#00B4B4] font-bold text-[10px] px-2.5 py-1 rounded-md">Fisika SMA</span>
-                  <span className="bg-[#00B4B4]/10 text-[#00B4B4] font-bold text-[10px] px-2.5 py-1 rounded-md">Matematika Wajib</span>
+                  <span className="bg-[#00B4B4]/10 text-[#00B4B4] font-bold text-[10px] px-2.5 py-1 rounded-md">Hewan Ceria</span>
+                  <span className="bg-[#00B4B4]/10 text-[#00B4B4] font-bold text-[10px] px-2.5 py-1 rounded-md">Di Sekolahku</span>
+                  <span className="bg-[#00B4B4]/10 text-[#00B4B4] font-bold text-[10px] px-2.5 py-1 rounded-md">Angka & Warna</span>
                 </div>
               </motion.div>
             </div>
@@ -143,12 +143,12 @@ const CaraKerjaPage = () => {
                 <div className="flex gap-3 items-start">
                   <div className="w-8 h-8 rounded-full bg-[#1E3A5F] text-white flex items-center justify-center text-xs font-black shrink-0">AI</div>
                   <div className="bg-slate-100 rounded-2xl rounded-tl-none p-3.5 text-xs text-[#1E3A5F] font-semibold leading-relaxed">
-                    Bagus sekali! Kamu benar bahwa fotosintesis membutuhkan cahaya matahari. Namun, menurutmu bagian sel tumbuhan manakah yang berfungsi menangkap energi cahaya ini?
+                    Mumtaz! ⭐ Benar sekali, 'قِطٌّ' (Qittun) artinya kucing. Nah, kalau hewan berkaki empat yang menghasilkan susu segar dan bersuara 'Moo...', dalam bahasa Arab apa ya?
                   </div>
                 </div>
                 <div className="flex gap-3 items-start justify-end">
                   <div className="bg-[#00B4B4]/10 rounded-2xl rounded-tr-none p-3.5 text-xs text-[#00B4B4] font-semibold leading-relaxed max-w-[80%] text-left">
-                    Hmm... Apakah bagian itu kloroplas?
+                    Hmm... Apakah itu بَقَرَةٌ (Baqaratun)? 🐮
                   </div>
                   <div className="w-8 h-8 rounded-full bg-[#00B4B4] text-white flex items-center justify-center text-xs font-black shrink-0">Kamu</div>
                 </div>
@@ -175,7 +175,7 @@ const CaraKerjaPage = () => {
                 <span className="text-[#00B4B4] font-bold text-xs">LANGKAH 02</span>
                 <h3 className="text-2xl font-extrabold text-[#1E3A5F] mt-2">Bimbingan Pertanyaan Socratic</h3>
                 <p className="text-slate-500 font-semibold text-sm mt-3 leading-relaxed">
-                  Bukannya langsung menyuapkan jawaban akhir, PahamIn AI akan menuntunmu melalui seri pertanyaan kritis yang merangsang penalaran logis, membantumu mengoreksi kesalahan berpikir secara mandiri.
+                  Bukannya langsung menyuapkan jawaban akhir, Kak Ifham AI akan menuntunmu melalui seri tebakan dan pertanyaan kritis yang menyenangkan, membantumu menguasai materi secara mandiri.
                 </p>
               </motion.div>
             </div>
@@ -197,7 +197,7 @@ const CaraKerjaPage = () => {
                 <span className="text-[#00B4B4] font-bold text-xs">LANGKAH 03</span>
                 <h3 className="text-2xl font-extrabold text-[#1E3A5F] mt-2">Thinking Trace (Penalaran Alur)</h3>
                 <p className="text-slate-500 font-semibold text-sm mt-3 leading-relaxed">
-                  Gunakan fitur *Thinking Trace* untuk membedah langkah demi langkah analisis logika di balik setiap materi atau pemecahan rumus matematika, sehingga kamu tidak bingung asal-muasal formulasi jawaban.
+                  Gunakan fitur *Thinking Trace* untuk membedah langkah demi langkah analisis logika di balik setiap kosakata bahasa Arab dan kaidah sederhana, sehingga santri cilik memahami asal-usul kata dan cara melafalkannya dengan percaya diri.
                 </p>
               </motion.div>
             </div>
@@ -219,17 +219,17 @@ const CaraKerjaPage = () => {
                 <span className="font-extrabold text-[#1E3A5F] text-xs pb-1 border-b border-slate-100">Alur Berpikir (Thinking Trace)</span>
                 <div className="flex items-center gap-3">
                   <div className="w-6 h-6 rounded-full bg-teal-50 text-[#00B4B4] text-[10px] font-black flex items-center justify-center shrink-0">1</div>
-                  <span className="text-slate-500 font-bold text-[11px]">Identifikasi Variabel dan Konstanta</span>
+                  <span className="text-slate-500 font-bold text-[11px]">Kenali Bentuk Huruf & Harakat (Tasykil)</span>
                 </div>
                 <div className="h-4 border-l-2 border-dashed border-[#00B4B4]/30 ml-3" />
                 <div className="flex items-center gap-3">
                   <div className="w-6 h-6 rounded-full bg-teal-50 text-[#00B4B4] text-[10px] font-black flex items-center justify-center shrink-0">2</div>
-                  <span className="text-slate-500 font-bold text-[11px]">Ubah Kalimat Masalah ke Bentuk Aljabar</span>
+                  <span className="text-slate-500 font-bold text-[11px]">Pahami Makna Kosakata & Terjemahan</span>
                 </div>
                 <div className="h-4 border-l-2 border-dashed border-[#00B4B4]/30 ml-3" />
                 <div className="flex items-center gap-3">
                   <div className="w-6 h-6 rounded-full bg-teal-50 text-[#00B4B4] text-[10px] font-black flex items-center justify-center shrink-0">3</div>
-                  <span className="text-[#00B4B4] font-bold text-[11px]">Substitusi Nilai & Selesaikan Persamaan</span>
+                  <span className="text-[#00B4B4] font-bold text-[11px]">Lafalkan Makhraj dengan Suara Ceria</span>
                 </div>
               </motion.div>
             </div>
@@ -294,10 +294,10 @@ const CaraKerjaPage = () => {
       <section className="bg-[#1E3A5F] text-white py-20 px-6 text-center select-none relative">
         <div className="max-w-4xl mx-auto flex flex-col items-center">
           <h2 className="text-3xl md:text-5xl font-black leading-tight tracking-tight">
-            Siap Belajar Lebih Cerdas dengan PahamIn?
+            Siap Belajar Bahasa Arab Cerdas dengan IfhamKids?
           </h2>
           <p className="text-slate-300 font-semibold text-base mt-6 max-w-xl leading-relaxed">
-            Daftarkan akun gratis hari ini juga dan kembangkan kebiasaan berpikir kritis yang kuat bersama Socratic AI kami!
+            Daftarkan akun gratis hari ini juga dan kembangkan kemampuan bahasa Arab anak bersama Sahabat AI Socratic kami!
           </p>
           <div className="flex gap-4 mt-8 font-bold">
             <Link 
@@ -324,12 +324,12 @@ const CaraKerjaPage = () => {
             <div className="flex items-center gap-3 mb-4">
               <Logo size="normal" showText={false} />
               <span className="text-2xl font-extrabold tracking-tight">
-                <span className="text-white">Paham</span>
-                <span className="text-[#00B4B4]">In</span>
+                <span className="text-white">Ifham</span>
+                <span className="text-[#00B4B4]">Kids</span>
               </span>
             </div>
             <p className="text-slate-400 font-bold text-xs">
-              Belajar lebih cerdas dengan AI Socratic PahamIn
+              Belajar bahasa Arab ramah anak dengan AI Socratic IfhamKids
             </p>
             <span className="text-slate-300 font-bold text-xs mt-8 mb-3 block">Follow us</span>
             <div className="flex gap-3">
@@ -373,7 +373,7 @@ const CaraKerjaPage = () => {
           <div className="lg:col-span-2">
             <h4 className="text-white font-extrabold text-sm mb-5">Hubungi Kami</h4>
             <div className="space-y-3 text-slate-400 font-semibold text-xs">
-              <span className="block">pahamin@gmail.com</span>
+              <span className="block">ifhamkids@gmail.com</span>
               <span className="block">+62 813-5832-8568</span>
               <span className="block">Malang, Indonesia</span>
             </div>
@@ -383,7 +383,7 @@ const CaraKerjaPage = () => {
 
         <div className="max-w-7xl mx-auto border-t border-slate-800/80 my-6"></div>
         <p className="text-slate-500 font-bold text-xs text-center">
-          PahamIn All Right Reserved, 2026
+          IfhamKids All Right Reserved, 2026
         </p>
       </footer>
 

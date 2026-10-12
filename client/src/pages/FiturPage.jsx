@@ -8,12 +8,12 @@ import chatImg from '../assets/icon socratic chat.png';
 const FiturPage = () => {
   const features = [
     {
-      title: 'Socratic Chat',
-      desc: 'AI membimbingmu dengan pertanyaan yang menuntun pemahaman mendalam, bukan sekadar memberi jawaban instan.',
+      title: 'Socratic Chat & Suara',
+      desc: 'Kak Ifham membimbing santri cilik dengan teka-teki ramah anak, dilengkapi audio pengucapan makhraj dan tombol suara.',
       details: [
-        'Pertanyaan kritis yang disesuaikan dengan materimu',
-        'Bimbingan dialog step-by-step yang terstruktur',
-        'Mengoreksi kesalahan berpikir secara mandiri',
+        'Teka-teki & dialog Socratic ramah anak SD',
+        'Audio lafal Arab (Text-to-Speech) & input mikrofon',
+        'Pilihan jawaban cepat (quick reply) tanpa ribet mengetik',
       ],
       icon: (
         <img src={chatImg} alt="Socratic Chat" className="w-12 h-12 object-contain" />
@@ -22,12 +22,12 @@ const FiturPage = () => {
       border: 'border-[#00B4B4]/20',
     },
     {
-      title: 'Upload Dokumen',
-      desc: 'Unggah materi belajar berupa PDF atau gambar, lalu AI akan meringkas dan menjelaskan inti materinya secara jelas.',
+      title: 'Materi & Lembar Kerja',
+      desc: 'Unggah modul bergambar, buku paket bahasa Arab SD, atau lembar tugas, lalu Kak Ifham akan menjelaskan artinya dengan ceria.',
       details: [
         'Mendukung format PDF, PNG, JPG',
-        'Ringkasan otomatis berbasis isi dokumen',
-        'Interpretasi diagram dan tabel visual',
+        'Penjelasan kosakata lengkap harakat & latin',
+        'Visualisasi gambar yang ramah anak',
       ],
       icon: (
         <svg width="48" height="48" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -41,11 +41,11 @@ const FiturPage = () => {
     },
     {
       title: 'Thinking Trace',
-      desc: 'Lihat penalaran langkah demi langkah agar kamu benar-benar paham bagaimana suatu jawaban atau solusi ditemukan.',
+      desc: 'Lihat alur penalaran langkah demi langkah agar adik-adik paham asal-usul kata dan makna bahasa Arab.',
       details: [
-        'Visualisasi alur berpikir yang runut',
-        'Dekomposisi masalah kompleks menjadi langkah sederhana',
-        'Ideal untuk matematika dan sains eksak',
+        'Visualisasi alur berpikir yang runut dan mudah dipahami',
+        'Dekomposisi harakat, makna, dan kaidah dasar',
+        'Ideal untuk penguasaan mufrodat & percakapan anak',
       ],
       icon: (
         <svg width="48" height="48" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -60,12 +60,12 @@ const FiturPage = () => {
       border: 'border-emerald-100',
     },
     {
-      title: 'Progress & Quiz',
-      desc: 'Pantau perkembangan belajarmu secara menyeluruh dengan grafik kemajuan dan kuis adaptif yang disesuaikan kelemahanmu.',
+      title: 'Progress & Kuis Ceria',
+      desc: 'Pantau perkembangan belajarmu secara menyenangkan dengan lencana bintang, streak harian, dan kuis adaptif.',
       details: [
-        'Dasbor grafik kemajuan belajar harian',
-        'Soal latihan otomatis berbasis analisis kelemahanmu',
-        'Evaluasi komprehensif siap ujian',
+        'Dasbor kemajuan belajar dan lencana ceria',
+        'Kuis tebak kata berbasis topik kurikulum SD',
+        'Evaluasi santai tanpa rasa takut salah',
       ],
       icon: (
         <img src={progressImg} alt="Progress" className="w-12 h-12 object-contain" />
@@ -124,7 +124,7 @@ const FiturPage = () => {
             Semua yang Kamu Butuhkan untuk <span className="text-[#00B4B4]">Belajar Lebih Cerdas</span>
           </h1>
           <p className="text-slate-500 font-medium text-base md:text-lg mt-6 max-w-2xl leading-relaxed">
-            PahamIn hadir dengan ekosistem fitur lengkap yang saling melengkapi — dari dialog Socratic, penalaran visual, hingga evaluasi adaptif — semua untuk satu tujuan: membantumu benar-benar paham.
+            IfhamKids hadir dengan ekosistem fitur lengkap yang ramah anak — dari dialog Socratic Kak Ifham, audio pelafalan makhraj, hingga kuis teka-teki ceria — semua untuk membantumu lancar berbahasa Arab.
           </p>
         </motion.div>
       </header>
@@ -174,10 +174,10 @@ const FiturPage = () => {
       <section className="bg-[#1E3A5F] text-white py-20 px-6 text-center select-none">
         <div className="max-w-4xl mx-auto flex flex-col items-center">
           <h2 className="text-3xl md:text-5xl font-black leading-tight tracking-tight">
-            Siap Coba Semua Fitur PahamIn?
+            Siap Coba Semua Fitur IfhamKids?
           </h2>
           <p className="text-slate-300 font-semibold text-base mt-6 max-w-xl leading-relaxed">
-            Daftar gratis hari ini dan nikmati seluruh fitur belajar cerdas yang sudah menunggumu!
+            Daftar gratis hari ini dan nikmati seluruh petualangan belajar bahasa Arab ceria yang menunggumu!
           </p>
           <div className="flex gap-4 mt-8 font-bold flex-wrap justify-center">
             <Link to="/register" className="bg-[#00B4B4] hover:bg-[#009c9c] text-white px-8 py-4 rounded-xl shadow-lg transition-all">
@@ -197,11 +197,11 @@ const FiturPage = () => {
             <div className="flex items-center gap-3 mb-4">
               <Logo size="normal" showText={false} />
               <span className="text-2xl font-extrabold tracking-tight">
-                <span className="text-white">Paham</span>
-                <span className="text-[#00B4B4]">In</span>
+                <span className="text-white">Ifham</span>
+                <span className="text-[#00B4B4]">Kids</span>
               </span>
             </div>
-            <p className="text-slate-400 font-bold text-xs">Belajar lebih cerdas dengan AI Socratic PahamIn</p>
+            <p className="text-slate-400 font-bold text-xs">Sahabat Socratic AI Belajar Bahasa Arab Ramah Anak SD</p>
             <span className="text-slate-300 font-bold text-xs mt-8 mb-3 block">Follow us</span>
             <div className="flex gap-3">
               {['twitter', 'linkedin', 'facebook', 'instagram'].map((soc, i) => (
@@ -224,8 +224,8 @@ const FiturPage = () => {
             <h4 className="text-white font-extrabold text-sm mb-5">Fitur</h4>
             <div className="space-y-3">
               <span className="block text-slate-400 font-semibold text-xs">Socratic Chat</span>
-              <span className="block text-slate-400 font-semibold text-xs">Upload Dokumen</span>
-              <span className="block text-slate-400 font-semibold text-xs">Thinking Trace</span>
+              <span className="block text-slate-400 font-semibold text-xs">Audio Suara Arab</span>
+              <span className="block text-slate-400 font-semibold text-xs">Tombol Opsi Cepat</span>
               <span className="block text-slate-400 font-semibold text-xs">Quiz & Progress</span>
             </div>
           </div>
@@ -240,14 +240,14 @@ const FiturPage = () => {
           <div className="lg:col-span-2">
             <h4 className="text-white font-extrabold text-sm mb-5">Hubungi Kami</h4>
             <div className="space-y-3 text-slate-400 font-semibold text-xs">
-              <span className="block">pahamin@gmail.com</span>
+              <span className="block">ifhamkids@gmail.com</span>
               <span className="block">+62 813-5832-8568</span>
               <span className="block">Malang, Indonesia</span>
             </div>
           </div>
         </div>
         <div className="max-w-7xl mx-auto border-t border-slate-800/80 my-6"></div>
-        <p className="text-slate-500 font-bold text-xs text-center">PahamIn All Right Reserved, 2026</p>
+        <p className="text-slate-500 font-bold text-xs text-center">IfhamKids All Right Reserved, 2026</p>
       </footer>
 
     </div>
