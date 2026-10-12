@@ -1003,23 +1003,7 @@ const ChatPage = () => {
                             </div>
                           )}
 
-                          {/* Optional Sentence Reader */}
-                          {!isUser && (
-                            <div className="mt-2.5 flex items-center gap-2 pt-2 border-t border-slate-100/60">
-                              <button
-                                type="button"
-                                onClick={() => handleSpeak(cleanText, i)}
-                                className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold transition-all cursor-pointer ${
-                                  isSpeaking 
-                                    ? 'bg-[#FFCA28] text-[#1E3A5F] animate-pulse' 
-                                    : 'bg-slate-100 hover:bg-slate-200 text-slate-600'
-                                }`}
-                              >
-                                {isSpeaking ? <VolumeX size={12} /> : <Volume2 size={12} />}
-                                <span>{isSpeaking ? 'Hentikan Kalimat' : 'Baca Seluruh Pesan'}</span>
-                              </button>
-                            </div>
-                          )}
+
 
                         </div>
                       </div>
