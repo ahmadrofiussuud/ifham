@@ -76,47 +76,47 @@ class SpeechService {
       if (options.onEnd) options.onEnd();
     };
 
-    // 1. Try High-Quality Audio from Google TTS API
-    if (cleanArabic) {
-      try {
-        const audioUrl = `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=ar&q=${encodeURIComponent(cleanArabic)}`;
-        const audio = new Audio(audioUrl);
-        this.currentAudio = audio;
+    // 1. Play Native Arabic Audio from our local backend proxy:
+    // This avoids Google 403 / CORS restrictions and plays authentic, crystal-clear Arabic makhraj!
+    const rawApiUrl = (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_API_URL) || 'http://localhost:5000';
+    const baseUrl = rawApiUrl.endsWith('/') ? rawApiUrl.slice(0, -1) : rawApiUrl;
+    const targetWord = cleanArabic || cleanPhonetic;
+    const audioUrl = `${baseUrl}/api/tts?q=${encodeURIComponent(targetWord)}&lang=ar`;
 
-        let hasPlayed = false;
+    try {
+      const audio = new Audio(audioUrl);
+      this.currentAudio = audio;
 
-        audio.onplay = () => {
-          hasPlayed = true;
-        };
+      let hasStartedPlaying = false;
 
-        audio.onended = () => {
+      audio.onplay = () => {
+        hasStartedPlaying = true;
+      };
+
+      audio.onended = () => {
+        handleFinished();
+      };
+
+      audio.onerror = (err) => {
+        console.warn('Backend audio failed, falling back to Web Speech API:', err);
+        if (!hasStartedPlaying) {
+          this.speakVocabSynth(cleanArabic, cleanPhonetic, handleFinished);
+        } else {
           handleFinished();
-        };
-
-        audio.onerror = () => {
-          // If network / CORS audio fails, fallback to Web Speech Synthesis
-          if (!hasPlayed) {
-            this.speakVocabSynth(cleanArabic, cleanPhonetic, handleFinished);
-          } else {
-            handleFinished();
-          }
-        };
-
-        const playPromise = audio.play();
-        if (playPromise !== undefined) {
-          playPromise.catch(() => {
-            // Autoplay restriction or network blocked, fallback to SpeechSynthesis
-            this.speakVocabSynth(cleanArabic, cleanPhonetic, handleFinished);
-          });
         }
-        return true;
-      } catch (e) {
-        // Fallback to synth
-        return this.speakVocabSynth(cleanArabic, cleanPhonetic, handleFinished);
-      }
-    }
+      };
 
-    return this.speakVocabSynth(cleanArabic, cleanPhonetic, handleFinished);
+      const playPromise = audio.play();
+      if (playPromise !== undefined) {
+        playPromise.catch((err) => {
+          console.warn('Audio play catch:', err);
+          this.speakVocabSynth(cleanArabic, cleanPhonetic, handleFinished);
+        });
+      }
+      return true;
+    } catch (e) {
+      return this.speakVocabSynth(cleanArabic, cleanPhonetic, handleFinished);
+    }
   }
 
   /**
@@ -126,6 +126,11 @@ class SpeechService {
     if (!this.synth) {
       if (onEndCallback) onEndCallback();
       return false;
+    }
+
+    // Chrome bug fix: resume synth if stuck
+    if (this.synth.paused) {
+      this.synth.resume();
     }
 
     if (this.voices.length === 0) {
@@ -140,13 +145,13 @@ class SpeechService {
     let selectedVoice = null;
 
     if (arabicVoice && arabicText) {
-      // Browser has Arabic voice engine!
+      // Browser has Arabic voice engine
       utteranceText = arabicText;
       utteranceLang = 'ar-SA';
       selectedVoice = arabicVoice;
     } else {
       // Browser lacks Arabic voice pack (common on Windows):
-      // Use clean phonetic pronunciation with Indonesian/default voice for clear sound!
+      // Use clean phonetic pronunciation with Indonesian/default voice for clear sound
       utteranceText = phoneticText || arabicText;
       utteranceLang = 'id-ID';
       selectedVoice = indonesianVoice || null;
@@ -154,7 +159,7 @@ class SpeechService {
 
     const utterance = new SpeechSynthesisUtterance(utteranceText);
     utterance.lang = utteranceLang;
-    utterance.rate = 0.82; // Child-friendly slow & clear rate
+    utterance.rate = 0.85; // Child-friendly slow & clear rate
     utterance.pitch = 1.05;
 
     if (selectedVoice) {

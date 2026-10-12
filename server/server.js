@@ -334,8 +334,39 @@ app.post('/api/chat/reset', authenticateToken, async (req, res) => {
     }
 });
 
+// Audio TTS Endpoint (for pure native Arabic pronunciation without CORS/403 blocks)
+app.get('/api/tts', async (req, res) => {
+    try {
+        const text = req.query.q || '';
+        const lang = req.query.lang || 'ar';
+        if (!text) {
+            return res.status(400).send('Missing text parameter');
+        }
+
+        const url = `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=${encodeURIComponent(lang)}&q=${encodeURIComponent(text)}`;
+        const response = await fetch(url, {
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+            }
+        });
+
+        if (!response.ok) {
+            return res.status(response.status).send('TTS upstream error');
+        }
+
+        res.setHeader('Content-Type', 'audio/mpeg');
+        res.setHeader('Cache-Control', 'public, max-age=86400');
+        const arrayBuffer = await response.arrayBuffer();
+        res.send(Buffer.from(arrayBuffer));
+    } catch (err) {
+        console.error('TTS Proxy Error:', err);
+        res.status(500).send('TTS generation failed');
+    }
+});
+
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
 
 module.exports = app;
+
