@@ -1003,6 +1003,25 @@ const ChatPage = () => {
                             </div>
                           )}
 
+                          {/* Dedicated Kak Ifham Audio Playback */}
+                          {!isUser && (
+                            <div className="mt-3 flex items-center gap-2 pt-2 border-t border-slate-100/80">
+                              <button
+                                type="button"
+                                onClick={() => handleSpeak(cleanText, i)}
+                                className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-black transition-all cursor-pointer shadow-2xs ${
+                                  isSpeaking 
+                                    ? 'bg-[#FFCA28] text-[#1E3A5F] animate-pulse' 
+                                    : 'bg-[#EAF9F9] hover:bg-[#d4f2f2] text-[#008383] border border-[#00B4B4]/20'
+                                }`}
+                                title="Dengarkan penjelasan suara Kak Ifham"
+                              >
+                                {isSpeaking ? <VolumeX size={13} /> : <Volume2 size={13} />}
+                                <span>{isSpeaking ? 'Hentikan Suara ⏹️' : 'Dengarkan Suara Kak Ifham 🔊'}</span>
+                              </button>
+                            </div>
+                          )}
+
 
 
                         </div>

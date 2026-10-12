@@ -21,16 +21,13 @@ class SpeechService {
 
   loadVoices() {
     if (!this.synth) return;
-    this.voices = this.synth.getVoices();
+    this.voices = this.synth.getVoices() || [];
   }
 
   containsArabic(text) {
     return /[\u0600-\u06FF]/.test(text || '');
   }
 
-  /**
-   * Stop any playing audio or speech synthesis
-   */
   stop() {
     if (this.currentAudio) {
       try {
@@ -55,9 +52,6 @@ class SpeechService {
   /**
    * Focused pronunciation for target Arabic vocabulary (e.g. Al-Hayawanat, Qittun, Baqaratun)
    * Plays pure Arabic pronunciation with clear makhraj
-   * @param {string} arabicText - The arabic word (e.g. "قِطٌّ" or "الحَيَوَانَات")
-   * @param {string} phoneticText - Romanized makhraj (e.g. "Qit-thun" or "Al-Hayawaanaat")
-   * @param {object} options - { onStart, onEnd }
    */
   speakVocab(arabicText, phoneticText = '', options = {}) {
     this.stop();
@@ -70,55 +64,72 @@ class SpeechService {
     if (options.onStart) options.onStart();
     this.isSpeaking = true;
 
+    let finishedCalled = false;
     const handleFinished = () => {
+      if (finishedCalled) return;
+      finishedCalled = true;
       this.isSpeaking = false;
       this.currentAudio = null;
       if (options.onEnd) options.onEnd();
     };
 
-    // 1. Play Native Arabic Audio from our local backend proxy:
-    // Uses relative '/api/tts' which Vite proxies to backend on both localhost and mobile LAN IP
     const targetWord = cleanArabic || cleanPhonetic;
-    const audioUrl = `/api/tts?q=${encodeURIComponent(targetWord)}&lang=ar`;
+    
+    // Primary: Relative backend/serverless proxy (proxied by Vite locally & handled by Vercel serverless)
+    const primaryUrl = `/api/tts?q=${encodeURIComponent(targetWord)}&lang=ar`;
+    // Fallback 1: Direct Google Translate TTS
+    const directFallbackUrl = `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=ar&q=${encodeURIComponent(targetWord)}`;
 
-    try {
-      const audio = new Audio(audioUrl);
-      this.currentAudio = audio;
+    const playWithFallback = (url, isFallback = false) => {
+      try {
+        const audio = new Audio(url);
+        this.currentAudio = audio;
 
-      let hasStartedPlaying = false;
+        let hasStartedPlaying = false;
 
-      audio.onplay = () => {
-        hasStartedPlaying = true;
-      };
+        audio.onplay = () => {
+          hasStartedPlaying = true;
+        };
 
-      audio.onended = () => {
-        handleFinished();
-      };
-
-      audio.onerror = (err) => {
-        console.warn('Backend audio failed, falling back to Web Speech API:', err);
-        if (!hasStartedPlaying) {
-          this.speakVocabSynth(cleanArabic, cleanPhonetic, handleFinished);
-        } else {
+        audio.onended = () => {
           handleFinished();
-        }
-      };
+        };
 
-      const playPromise = audio.play();
-      if (playPromise !== undefined) {
-        playPromise.catch((err) => {
-          console.warn('Audio play catch:', err);
+        audio.onerror = () => {
+          if (!isFallback) {
+            // Try direct Google TTS
+            playWithFallback(directFallbackUrl, true);
+          } else {
+            // Both failed, fallback to Web Speech API
+            this.speakVocabSynth(cleanArabic, cleanPhonetic, handleFinished);
+          }
+        };
+
+        const playPromise = audio.play();
+        if (playPromise !== undefined) {
+          playPromise.catch(() => {
+            if (!isFallback) {
+              playWithFallback(directFallbackUrl, true);
+            } else {
+              this.speakVocabSynth(cleanArabic, cleanPhonetic, handleFinished);
+            }
+          });
+        }
+      } catch (e) {
+        if (!isFallback) {
+          playWithFallback(directFallbackUrl, true);
+        } else {
           this.speakVocabSynth(cleanArabic, cleanPhonetic, handleFinished);
-        });
+        }
       }
-      return true;
-    } catch (e) {
-      return this.speakVocabSynth(cleanArabic, cleanPhonetic, handleFinished);
-    }
+    };
+
+    playWithFallback(primaryUrl);
+    return true;
   }
 
   /**
-   * Internal SpeechSynthesis fallback for vocabulary
+   * Internal SpeechSynthesis fallback for Arabic vocabulary
    */
   speakVocabSynth(arabicText, phoneticText, onEndCallback) {
     if (!this.synth) {
@@ -126,7 +137,6 @@ class SpeechService {
       return false;
     }
 
-    // Chrome bug fix: resume synth if stuck
     if (this.synth.paused) {
       this.synth.resume();
     }
@@ -143,13 +153,10 @@ class SpeechService {
     let selectedVoice = null;
 
     if (arabicVoice && arabicText) {
-      // Browser has Arabic voice engine
       utteranceText = arabicText;
       utteranceLang = 'ar-SA';
       selectedVoice = arabicVoice;
     } else {
-      // Browser lacks Arabic voice pack (common on Windows):
-      // Use clean phonetic pronunciation with Indonesian/default voice for clear sound
       utteranceText = phoneticText || arabicText;
       utteranceLang = 'id-ID';
       selectedVoice = indonesianVoice || null;
@@ -157,7 +164,7 @@ class SpeechService {
 
     const utterance = new SpeechSynthesisUtterance(utteranceText);
     utterance.lang = utteranceLang;
-    utterance.rate = 0.85; // Child-friendly slow & clear rate
+    utterance.rate = 0.85;
     utterance.pitch = 1.05;
 
     if (selectedVoice) {
@@ -168,8 +175,7 @@ class SpeechService {
       if (onEndCallback) onEndCallback();
     };
 
-    utterance.onerror = (e) => {
-      console.warn('Speech synthesis error:', e);
+    utterance.onerror = () => {
       if (onEndCallback) onEndCallback();
     };
 
@@ -178,43 +184,40 @@ class SpeechService {
   }
 
   /**
-   * Standard speak text (for backward compatibility)
+   * Speak friendly Indonesian explanation (skips Arabic symbols so voice doesn't choke)
    */
   speak(text, options = {}) {
     if (!this.synth) return false;
     this.stop();
 
     const cleanText = text
+      .replace(/\[OPSI:.*?\]/gis, '')
+      .replace(/\*\*([\u0600-\u06FF\s]+)\*\*/g, '')
+      .replace(/[\u0600-\u06FF]+/g, '')
       .replace(/\*\*(.*?)\*\*/g, '$1')
       .replace(/\*(.*?)\*/g, '$1')
       .replace(/#{1,6}\s?/g, '')
-      .replace(/\[.*?\]\(.*?\)/g, '')
-      .replace(/`{1,3}.*?`{1,3}/gs, '')
+      .replace(/\s+/g, ' ')
       .trim();
 
     if (!cleanText) return false;
 
+    if (this.synth.paused) {
+      this.synth.resume();
+    }
+
     const utterance = new SpeechSynthesisUtterance(cleanText);
-    const hasArabic = this.containsArabic(cleanText);
-    const targetLang = options.lang || (hasArabic ? 'ar-SA' : 'id-ID');
-    utterance.lang = targetLang;
-    utterance.rate = options.rate || (hasArabic ? 0.85 : 0.95);
-    utterance.pitch = options.pitch || 1.05;
+    utterance.lang = 'id-ID';
+    utterance.rate = 0.95;
+    utterance.pitch = 1.05;
 
     if (this.voices.length === 0) {
       this.loadVoices();
     }
 
-    if (this.voices.length > 0) {
-      let matchedVoice = null;
-      if (targetLang.startsWith('ar')) {
-        matchedVoice = this.voices.find(v => v.lang.startsWith('ar') || v.lang.includes('Arabic'));
-      } else {
-        matchedVoice = this.voices.find(v => v.lang.startsWith('id') || v.lang.includes('Indonesian'));
-      }
-      if (matchedVoice) {
-        utterance.voice = matchedVoice;
-      }
+    const indonesianVoice = this.voices.find(v => v.lang.startsWith('id') || v.lang.includes('Indonesian'));
+    if (indonesianVoice) {
+      utterance.voice = indonesianVoice;
     }
 
     utterance.onstart = () => {
@@ -227,7 +230,7 @@ class SpeechService {
       if (options.onEnd) options.onEnd();
     };
 
-    utterance.onerror = (e) => {
+    utterance.onerror = () => {
       this.isSpeaking = false;
       if (options.onEnd) options.onEnd();
     };
@@ -238,14 +241,17 @@ class SpeechService {
 
   isRecognitionSupported() {
     return typeof window !== 'undefined' && 
-      (Boolean(window.SpeechRecognition) || Boolean(window.webkitSpeechRecognition));
+      (!!window.SpeechRecognition || !!window.webkitSpeechRecognition);
   }
 
-  startListening({ lang = 'id-ID', onResult, onError, onEnd }) {
+  startListening(options = {}) {
     if (!this.isRecognitionSupported()) {
-      if (onError) onError('Browser tidak mendukung perekaman suara (Speech-to-Text).');
+      if (options.onError) options.onError('Speech recognition not supported in this browser');
       return null;
     }
+
+    this.stop();
+    const { onResult, onError, onEnd, lang = 'id-ID' } = options;
 
     const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
     this.recognition = new SpeechRec();
@@ -259,7 +265,6 @@ class SpeechService {
     };
 
     this.recognition.onerror = (event) => {
-      console.warn('Speech recognition error:', event.error);
       if (onError) onError(event.error);
     };
 
@@ -282,8 +287,7 @@ class SpeechService {
 /**
  * Extracts target Arabic vocabularies and their romanization/translation
  * from a message to display dedicated voice pronunciation buttons.
- * @param {string} content
- * @returns {Array<{arabic: string, phonetic: string, label: string}>}
+ * Guarantees ANY Arabic word found gets an audio button!
  */
 export const extractVocabulariesFromMessage = (content = '') => {
   if (!content) return [];
@@ -291,18 +295,17 @@ export const extractVocabulariesFromMessage = (content = '') => {
   const seen = new Set();
 
   // Pattern 1: **قِطٌّ** (*Qit-thun = Kucing*) or **قِطٌّ** (Qit-thun)
-  const pattern1 = /\*\*([\u0600-\u06FF\s]+)\*\*\s*\(\*?([a-zA-Z\s'-]+)(?:=|\-)?([^\*)]*)\*?\)/g;
+  const pattern1 = /\*\*([\u0600-\u06FF\s]+)\*\*\s*(?:\(\*?([a-zA-Z\s'-]+)(?:=|\-)?([^\*)]*)\*?\))?/g;
   let match;
   while ((match = pattern1.exec(content)) !== null) {
     const arabic = match[1].trim();
-    const phonetic = match[2].trim();
-    const key = `${arabic}-${phonetic}`;
-    if (!seen.has(key) && arabic.length >= 2) {
-      seen.add(key);
+    const phonetic = (match[2] || '').trim();
+    if (!seen.has(arabic) && arabic.length >= 2) {
+      seen.add(arabic);
       results.push({
         arabic,
         phonetic,
-        label: `${arabic} (${phonetic})`
+        label: phonetic ? `${arabic} (${phonetic})` : arabic
       });
     }
   }
@@ -312,9 +315,8 @@ export const extractVocabulariesFromMessage = (content = '') => {
   while ((match = pattern2.exec(content)) !== null) {
     const arabic = match[2].trim();
     const phonetic = match[3].trim();
-    const key = `${arabic}-${phonetic}`;
-    if (!seen.has(key) && arabic.length >= 2) {
-      seen.add(key);
+    if (!seen.has(arabic) && arabic.length >= 2) {
+      seen.add(arabic);
       results.push({
         arabic,
         phonetic,
@@ -323,18 +325,16 @@ export const extractVocabulariesFromMessage = (content = '') => {
     }
   }
 
-  // Pattern 3: Topik e.g. (**Al-Hayawaanaat** / الحَيَوَانَات)
-  const pattern3 = /\(\*?([a-zA-Z\s'-]+)\*?\s*\/\s*([\u0600-\u06FF\s]+)\)/g;
-  while ((match = pattern3.exec(content)) !== null) {
-    const phonetic = match[1].trim();
-    const arabic = match[2].trim();
-    const key = `${arabic}-${phonetic}`;
-    if (!seen.has(key) && arabic.length >= 2) {
-      seen.add(key);
+  // Pattern 3: Any other Arabic word / phrase with 2+ characters
+  const arabicRegex = /([\u0600-\u06FF\u0670-\u06D3\u0640]{2,30})/g;
+  while ((match = arabicRegex.exec(content)) !== null) {
+    const arabic = match[1].trim();
+    if (arabic.length >= 2 && !seen.has(arabic)) {
+      seen.add(arabic);
       results.push({
         arabic,
-        phonetic,
-        label: `${arabic} (${phonetic})`
+        phonetic: '',
+        label: arabic
       });
     }
   }
@@ -344,4 +344,3 @@ export const extractVocabulariesFromMessage = (content = '') => {
 
 export const speechService = new SpeechService();
 export default speechService;
-

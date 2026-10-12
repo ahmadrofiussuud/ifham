@@ -191,7 +191,7 @@ const generateSocraticDummyResponse = (message, mode = 'socratic', topic = 'Hewa
     return response;
 };
 
-app.post('/api/chat/message', authenticateToken, async (req, res) => {
+app.post(['/api/chat/message', '/chat/message'], authenticateToken, async (req, res) => {
     const { message, sessionId, seedHistory, mode, topic } = req.body;
     const userId = req.user.id;
     let currentSessionId = sessionId;
@@ -326,7 +326,7 @@ ATURAN WAJIB & KETAT:
     }
 });
 
-app.get('/api/chat/history/:sessionId', authenticateToken, async (req, res) => {
+app.get(['/api/chat/history/:sessionId', '/chat/history/:sessionId'], authenticateToken, async (req, res) => {
     try {
         const { data: history, error } = await supabase
             .from('messages')
@@ -341,7 +341,7 @@ app.get('/api/chat/history/:sessionId', authenticateToken, async (req, res) => {
     }
 });
 
-app.post('/api/chat/reset', authenticateToken, async (req, res) => {
+app.post(['/api/chat/reset', '/chat/reset'], authenticateToken, async (req, res) => {
     try {
         const { data: newSession, error } = await supabase
             .from('chat_sessions')
@@ -357,7 +357,7 @@ app.post('/api/chat/reset', authenticateToken, async (req, res) => {
 });
 
 // Audio TTS Endpoint (for pure native Arabic pronunciation without CORS/403 blocks)
-app.get('/api/tts', async (req, res) => {
+app.get(['/api/tts', '/tts'], async (req, res) => {
     try {
         const text = req.query.q || '';
         const lang = req.query.lang || 'ar';
