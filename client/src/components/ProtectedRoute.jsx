@@ -10,10 +10,7 @@ const ProtectedRoute = ({ children }) => {
     </div>
   );
 
-  if (!user) {
-    return <Navigate to="/login" />;
-  }
-
+  // Allow seamless access to all pages (Chat, Progress, etc.)
   return children;
 };
 

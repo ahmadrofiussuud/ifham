@@ -1,0 +1,20 @@
+{
+  "name": "ifham-kids",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Ifham Kids - Sahabat Socratic Belajar Bahasa Arab Anak SD",
+  "scripts": {
+    "build": "cd client && npm install && npm run build",
+    "server": "node server/server.js",
+    "client": "cd client && npm run dev"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "@supabase/supabase-js": "^2.104.1",
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3"
+  }
+}

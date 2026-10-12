@@ -2,6 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '.env') });
 require('dotenv').config();
 const { createClient } = require('@supabase/supabase-js');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
@@ -9,27 +11,47 @@ const { GoogleGenerativeAI } = require('@google/generative-ai');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Supabase Setup
-const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseKey = process.env.SUPABASE_ANON_KEY;
-const supabase = createClient(supabaseUrl, supabaseKey);
+// Supabase Setup (Graceful Fallback if not configured)
+const supabaseUrl = process.env.SUPABASE_URL || 'https://placeholder.supabase.co';
+const supabaseKey = process.env.SUPABASE_ANON_KEY || 'placeholder-key';
+let supabase;
+try {
+    supabase = createClient(supabaseUrl, supabaseKey);
+} catch (err) {
+    console.warn('Supabase initialization failed, running in guest memory mode:', err.message);
+    supabase = {
+        from: () => ({
+            select: () => ({ eq: () => ({ order: () => Promise.resolve({ data: [] }) }), single: () => Promise.resolve({ data: null }) }),
+            insert: () => Promise.resolve({ data: null }),
+            update: () => Promise.resolve({ data: null })
+        })
+    };
+}
 
 // Gemini Setup
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+const geminiApiKey = process.env.GEMINI_API_KEY || '';
+const genAI = new GoogleGenerativeAI(geminiApiKey);
+const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
 app.use(cors());
 app.use(express.json());
 
-// Auth Middleware
+// Auth Middleware (Graceful for Guests & Direct AI Experience)
 const authenticateToken = (req, res, next) => {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
 
-    if (!token) return res.status(401).json({ message: 'Access denied' });
+    if (!token) {
+        // Direct access for guests: auto-assign demo student
+        req.user = { id: 'demo-murid-a', email: 'murida@ifhamkids.com', name: 'Ahmad Cilik' };
+        return next();
+    }
 
-    jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-        if (err) return res.status(403).json({ message: 'Invalid token' });
+    jwt.verify(token, process.env.JWT_SECRET || 'ifham-secret-key-default', (err, user) => {
+        if (err) {
+            req.user = { id: 'demo-murid-a', email: 'murida@ifhamkids.com', name: 'Ahmad Cilik' };
+            return next();
+        }
         req.user = user;
         next();
     });
@@ -262,7 +284,7 @@ ATURAN WAJIB & KETAT:
             }
 
             const socraticModel = genAI.getGenerativeModel({ 
-                model: "gemini-1.5-flash",
+                model: "gemini-2.5-flash",
                 systemInstruction: systemPrompt
             });
 
@@ -387,9 +409,11 @@ app.get('/api/tts', async (req, res) => {
     }
 });
 
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});
+if (require.main === module) {
+    app.listen(PORT, () => {
+        console.log(`Server running on port ${PORT}`);
+    });
+}
 
 module.exports = app;
 

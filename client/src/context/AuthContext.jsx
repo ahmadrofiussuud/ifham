@@ -51,9 +51,15 @@ export const AuthProvider = ({ children }) => {
           setUser(res.data);
           localStorage.setItem('user_data', JSON.stringify(res.data));
         } catch (err) {
-          localStorage.removeItem('token');
-          localStorage.removeItem('user_data');
+          const defaultUser = DEMO_USERS[0];
+          setUser(defaultUser);
+          localStorage.setItem('user_data', JSON.stringify(defaultUser));
         }
+      } else {
+        // Direct Guest Mode: Auto-login with Demo Student so everyone can immediately test Kak Ifham AI
+        const defaultUser = DEMO_USERS[0];
+        setUser(defaultUser);
+        localStorage.setItem('user_data', JSON.stringify(defaultUser));
       }
       setLoading(false);
     };

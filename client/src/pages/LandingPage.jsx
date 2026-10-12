@@ -84,26 +84,26 @@ const LandingPage = () => {
             <span className="text-xs font-black">Buku Panduan</span>
           </button>
           <Link 
+            to="/chat" 
+            className="bg-[#00B4B4] hover:bg-[#009b9b] text-white px-4 py-2 rounded-xl transition-all shadow-sm flex items-center gap-1.5"
+          >
+            <span>Chat Kak Ifham 💬</span>
+          </Link>
+          <Link 
             to="/login" 
             className="bg-[#1E3A5F] hover:bg-[#152a46] text-white px-4 py-2 rounded-xl transition-all shadow-sm"
           >
             Masuk
           </Link>
-          <Link 
-            to="/register" 
-            className="bg-white border-2 border-[#00B4B4] text-[#00B4B4] hover:bg-[#00B4B4] hover:text-white px-3.5 py-2 rounded-xl transition-all shadow-sm"
-          >
-            Registrasi
-          </Link>
         </div>
 
-        {/* Mobile Hamburger & Quick Login Button */}
+        {/* Mobile Hamburger & Quick Chat Button */}
         <div className="flex sm:hidden items-center gap-2">
           <Link 
-            to="/login" 
-            className="bg-[#1E3A5F] text-white px-3 py-1.5 rounded-lg text-xs font-black shadow-xs"
+            to="/chat" 
+            className="bg-[#00B4B4] text-white px-3 py-1.5 rounded-lg text-xs font-black shadow-xs flex items-center gap-1"
           >
-            Masuk
+            <span>Chat AI 💬</span>
           </Link>
           <button
             type="button"
@@ -210,10 +210,10 @@ const LandingPage = () => {
             {/* CTA Buttons */}
             <div className="flex flex-wrap gap-3 mt-8 font-bold">
               <Link 
-                to="/register" 
+                to="/chat" 
                 className="bg-[#1E3A5F] hover:bg-[#152a46] text-white px-7 py-3.5 rounded-xl text-center shadow-lg shadow-navy/10 transform hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center gap-2"
               >
-                <span>Mulai Petualangan 🚀</span>
+                <span>Mulai Belajar Sekarang 🚀</span>
               </Link>
               <button 
                 type="button"
