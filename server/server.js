@@ -354,10 +354,33 @@ app.get('/api/tts', async (req, res) => {
             return res.status(response.status).send('TTS upstream error');
         }
 
-        res.setHeader('Content-Type', 'audio/mpeg');
-        res.setHeader('Cache-Control', 'public, max-age=86400');
         const arrayBuffer = await response.arrayBuffer();
-        res.send(Buffer.from(arrayBuffer));
+        const buffer = Buffer.from(arrayBuffer);
+
+        const range = req.headers.range;
+        if (range) {
+            const parts = range.replace(/bytes=/, "").split("-");
+            const start = parseInt(parts[0], 10);
+            const end = parts[1] ? parseInt(parts[1], 10) : buffer.length - 1;
+            const chunksize = (end - start) + 1;
+            res.writeHead(206, {
+                'Content-Range': `bytes ${start}-${end}/${buffer.length}`,
+                'Accept-Ranges': 'bytes',
+                'Content-Length': chunksize,
+                'Content-Type': 'audio/mpeg',
+                'Access-Control-Allow-Origin': '*'
+            });
+            res.end(buffer.subarray(start, end + 1));
+        } else {
+            res.writeHead(200, {
+                'Content-Type': 'audio/mpeg',
+                'Content-Length': buffer.length,
+                'Accept-Ranges': 'bytes',
+                'Access-Control-Allow-Origin': '*',
+                'Cache-Control': 'public, max-age=86400'
+            });
+            res.end(buffer);
+        }
     } catch (err) {
         console.error('TTS Proxy Error:', err);
         res.status(500).send('TTS generation failed');
