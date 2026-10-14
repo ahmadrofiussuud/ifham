@@ -8,13 +8,15 @@ import heroImg from '../assets/ilustrasi belajar.png';
 import starImg from '../assets/Vector.png';
 import chatImg from '../assets/icon socratic chat.png';
 import achievementImg from '../assets/icon quiz hari ini.png';
+import { GRADE_CONFIGS, GRADE_KEYS } from '../constants/gradeCurriculum';
 
 const RegisterPage = () => {
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
+    grade: 'SD Kelas 3'
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -47,7 +49,7 @@ const RegisterPage = () => {
     setError('');
     setLoading(true);
     try {
-      await register(formData.fullName, formData.email, formData.password);
+      await register(formData.fullName, formData.email, formData.password, formData.grade);
       alert("Registrasi berhasil! Silakan masuk.");
       navigate('/login');
     } catch (err) {
@@ -242,6 +244,31 @@ const RegisterPage = () => {
                   className="w-full px-4 py-3 bg-[#F8FAFC] border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#00B4B4] focus:border-transparent transition-all text-[#1E3A5F] placeholder-slate-400 font-semibold"
                   placeholder="budi@email.com"
                 />
+              </div>
+
+              <div>
+                <label className="block text-sm font-bold text-[#1E3A5F] mb-2 flex items-center justify-between">
+                  <span>Tingkatan Kelas Santri</span>
+                  <span className="text-[11px] font-bold text-[#00B4B4]">Kurikulum Terstandar</span>
+                </label>
+                <select
+                  name="grade"
+                  value={formData.grade}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 bg-[#F8FAFC] border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#00B4B4] focus:border-transparent transition-all text-[#1E3A5F] font-bold text-sm cursor-pointer"
+                >
+                  {GRADE_KEYS.map((k) => {
+                    const conf = GRADE_CONFIGS[k];
+                    return (
+                      <option key={k} value={conf.label}>
+                        {conf.label} — {conf.focus}
+                      </option>
+                    );
+                  })}
+                </select>
+                <p className="text-[11px] text-slate-400 font-semibold mt-1.5">
+                  AI Kak Ifham akan secara otomatis menyesuaikan gaya bahasa & materi sesuai kelas yang dipilih.
+                </p>
               </div>
 
               <div>

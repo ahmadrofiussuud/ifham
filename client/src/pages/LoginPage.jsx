@@ -201,22 +201,32 @@ const LoginPage = () => {
                     key={demoUser.id}
                     type="button"
                     onClick={() => handleDemoLogin(demoUser)}
-                    className="flex items-center justify-between p-3 bg-white hover:bg-teal-50/50 border border-slate-200/80 hover:border-[#00B4B4] rounded-xl transition-all duration-200 shadow-sm hover:shadow group text-left"
+                    className="flex items-center justify-between p-3.5 bg-white hover:bg-teal-50/60 border border-slate-200/90 hover:border-[#00B4B4] rounded-2xl transition-all duration-200 shadow-sm hover:shadow group text-left"
                   >
-                    <div className="flex items-center gap-3">
-                      <span className="text-2xl select-none">{demoUser.avatar}</span>
+                    <div className="flex items-center gap-3.5">
+                      <span className="text-3xl select-none p-1.5 bg-slate-50 rounded-xl group-hover:bg-teal-100/50 transition-colors">{demoUser.avatar}</span>
                       <div>
-                        <div className="font-bold text-sm text-[#1E3A5F] group-hover:text-[#00B4B4] transition-colors">
-                          {demoUser.name}
+                        <div className="flex items-center gap-2">
+                          <span className="font-extrabold text-sm text-[#1E3A5F] group-hover:text-[#00B4B4] transition-colors">
+                            {demoUser.name}
+                          </span>
+                          <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-[#1E3A5F] text-white">
+                            {demoUser.grade}
+                          </span>
                         </div>
-                        <div className="text-xs text-slate-500 font-medium">
-                          {demoUser.grade} • {demoUser.email}
+                        {demoUser.focusSummary && (
+                          <div className="text-[11px] text-teal-700 font-semibold mt-0.5">
+                            🎯 {demoUser.focusSummary}
+                          </div>
+                        )}
+                        <div className="text-[11px] text-slate-400 font-medium">
+                          {demoUser.email}
                         </div>
                       </div>
                     </div>
-                    <div className="flex items-center gap-1 text-xs font-bold text-[#00B4B4] opacity-80 group-hover:opacity-100 transition-opacity">
-                      <span>Masuk</span>
-                      <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
+                    <div className="flex items-center gap-1 text-xs font-bold text-[#00B4B4] opacity-80 group-hover:opacity-100 transition-opacity pl-2">
+                      <span className="hidden sm:inline">Pilih</span>
+                      <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
                     </div>
                   </button>
                 ))}

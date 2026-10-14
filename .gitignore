@@ -36,3 +36,6 @@ Thumbs.db
 
 # Vite cache
 client/.vite/
+
+# Temporary scratch
+scratch/

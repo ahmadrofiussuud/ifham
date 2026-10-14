@@ -98,9 +98,14 @@ const Dashboard = () => {
         
         {/* Welcoming Header */}
         <div className="mb-10 text-left">
-          <div className="inline-flex items-center gap-2 bg-[#EAF9F9] border border-[#00B4B4]/30 px-3.5 py-1 rounded-full mb-3 text-xs font-black text-[#00B4B4]">
+          <div className="inline-flex items-center gap-2 bg-[#EAF9F9] border border-[#00B4B4]/30 px-3.5 py-1 rounded-full mb-3 text-xs font-black text-[#00B4B4] flex-wrap">
             <span>🐪</span>
             <span>Ifham Kids • Sahabat Belajar Bahasa Arab</span>
+            {user?.grade && (
+              <span className="bg-[#00B4B4] text-white px-2.5 py-0.5 rounded-full text-[10px] font-black">
+                {user.grade}
+              </span>
+            )}
           </div>
           <h1 className="text-3xl lg:text-4xl font-extrabold text-[#1E3A5F] tracking-tight">
             Ahlan wa Sahlan, <span className="text-[#00B4B4]">{firstName}!</span> 🌟 Mau berpetualang apa hari ini?

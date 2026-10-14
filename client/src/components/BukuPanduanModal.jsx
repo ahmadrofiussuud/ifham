@@ -14,8 +14,7 @@ const BukuPanduanModal = ({ isOpen, onClose }) => {
 
   const handleTestAudio = () => {
     setIsPlayingAudio(true);
-    speechService.speak("قِطٌّ", {
-      lang: 'ar-SA',
+    speechService.speakVocab("قِطٌّ", "Qit-thun", {
       onEnd: () => setIsPlayingAudio(false)
     });
   };
@@ -240,48 +239,132 @@ const BukuPanduanModal = ({ isOpen, onClose }) => {
               </motion.div>
             )}
 
-            {/* TAB 4: LEVEL MATERI SD */}
+            {/* TAB 4: LEVEL MATERI SD (REKOMENDASI AHLI MATERI) */}
             {activeTab === 'level' && (
               <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} className="space-y-5">
                 <div>
-                  <h4 className="text-lg font-black text-[#1E3A5F]">
-                    Peta Kurikulum Bahasa Arab Anak SD 🗺️
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] font-black uppercase tracking-wider bg-teal-100 text-teal-800 px-2.5 py-0.5 rounded-full">
+                      Standar Capaian Ahli Materi
+                    </span>
+                    <span className="text-xs text-slate-400 font-bold">5 Tingkatan Kelas</span>
+                  </div>
+                  <h4 className="text-lg sm:text-xl font-black text-[#1E3A5F] mt-1">
+                    Peta Capaian Kurikulum Bahasa Arab SD 🗺️
                   </h4>
-                  <p className="text-slate-600 text-xs sm:text-sm font-medium mt-1">
-                    Disusun khusus bertahap dari hal yang paling akrab dengan kehidupan sehari-hari anak:
+                  <p className="text-slate-600 text-xs sm:text-sm font-medium mt-1 leading-relaxed">
+                    Setiap tingkatan kelas dirancang dengan batasan pedagogis ketat agar materi sesuai dengan tingkat kognitif santri cilik:
                   </p>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                  <div className="p-4 rounded-2xl bg-white border border-slate-200 flex items-center gap-3.5 shadow-sm">
-                    <div className="w-12 h-12 rounded-xl bg-amber-100 flex items-center justify-center text-2xl shrink-0">🦁</div>
-                    <div>
-                      <h5 className="font-black text-[#1E3A5F] text-sm">Level 1: Hewan Ceria (الحَيَوَانَات)</h5>
-                      <p className="text-xs text-slate-500 font-medium">Kucing, Singa, Gajah, Burung, Ikan.</p>
+                <div className="space-y-3">
+                  {/* KELAS 1 */}
+                  <div className="p-4 rounded-2xl bg-gradient-to-r from-amber-50/70 to-orange-50/40 border border-amber-200 shadow-sm flex flex-col sm:flex-row sm:items-start gap-3.5">
+                    <div className="w-12 h-12 rounded-2xl bg-amber-500 text-white flex items-center justify-center font-black text-base shrink-0 shadow-sm">
+                      K1
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <h5 className="font-black text-[#1E3A5F] text-sm sm:text-base">SD Kelas 1: Kata Tunjuk, Angka & Hijaiyah</h5>
+                        <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-amber-100 text-amber-800">Pemula Dasar</span>
+                      </div>
+                      <p className="text-xs text-slate-700 font-bold mt-1">
+                        🎯 <span className="text-[#1E3A5F]">Fokus Capaian:</span> Kata tunjuk (هٰذَا/هٰذِهِ - haza/hazihi), angka 1-10 (الأَرْقَام ١-١٠), dan huruf hijaiyah.
+                      </p>
+                      <p className="text-xs text-slate-600 font-medium mt-0.5">
+                        📚 <span className="text-slate-700 font-bold">Tema Resmi:</span> Perkenalan (التَّعَارُف), Keluarga (الأُسْرَة), Hobi (الهِوَايَة), Buah (الفَوَاكِه).
+                      </p>
+                      <p className="text-[11px] text-amber-800 font-semibold mt-1 bg-amber-100/70 px-2.5 py-1 rounded-lg">
+                        ⚠️ <strong>Batasan:</strong> Kosakata 1-2 kata, tanpa kalimat majemuk, dekat dengan dunia anak usia 6-7 tahun.
+                      </p>
                     </div>
                   </div>
 
-                  <div className="p-4 rounded-2xl bg-white border border-slate-200 flex items-center gap-3.5 shadow-sm">
-                    <div className="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center text-2xl shrink-0">🎒</div>
-                    <div>
-                      <h5 className="font-black text-[#1E3A5F] text-sm">Level 2: Di Sekolahku (الأَدَوَات المَدْرَسِيَّة)</h5>
-                      <p className="text-xs text-slate-500 font-medium">Buku, Pena, Tas, Papan Tulis, Kelas.</p>
+                  {/* KELAS 3 */}
+                  <div className="p-4 rounded-2xl bg-gradient-to-r from-emerald-50/70 to-teal-50/40 border border-emerald-200 shadow-sm flex flex-col sm:flex-row sm:items-start gap-3.5">
+                    <div className="w-12 h-12 rounded-2xl bg-emerald-600 text-white flex items-center justify-center font-black text-base shrink-0 shadow-sm">
+                      K3
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <h5 className="font-black text-[#1E3A5F] text-sm sm:text-base">SD Kelas 3: Pola Tanya Jawab Dasar</h5>
+                        <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">Interaksi Dialogis</span>
+                      </div>
+                      <p className="text-xs text-slate-700 font-bold mt-1">
+                        🎯 <span className="text-[#1E3A5F]">Fokus Capaian:</span> Pola tanya jawab dasar seperti <em>Hal 'indaka...?</em> (Apakah kamu punya...?) &amp; <em>Maza tuhibbu...?</em> (Apa yang kamu sukai?).
+                      </p>
+                      <p className="text-xs text-slate-600 font-medium mt-0.5">
+                        📚 <span className="text-slate-700 font-bold">Tema Resmi:</span> Hewan (الحَيَوَانَات), Olahraga (الرِّيَاضَة), Penyakit &amp; Kesehatan (الأَمْرَاض).
+                      </p>
+                      <p className="text-[11px] text-emerald-800 font-semibold mt-1 bg-emerald-100/70 px-2.5 py-1 rounded-lg">
+                        ⚠️ <strong>Batasan:</strong> Dialog sederhana 1 kalimat bolak-balik (Na'am/Laa/'Indii/Uhibbu), belum perubahan fi'il rumit.
+                      </p>
                     </div>
                   </div>
 
-                  <div className="p-4 rounded-2xl bg-white border border-slate-200 flex items-center gap-3.5 shadow-sm">
-                    <div className="w-12 h-12 rounded-xl bg-emerald-100 flex items-center justify-center text-2xl shrink-0">🎨</div>
-                    <div>
-                      <h5 className="font-black text-[#1E3A5F] text-sm">Level 3: Angka & Warna (الأَرْقَام وَالأَلْوَان)</h5>
-                      <p className="text-xs text-slate-500 font-medium">1-10, Merah, Biru, Hijau, Kuning.</p>
+                  {/* KELAS 4 */}
+                  <div className="p-4 rounded-2xl bg-gradient-to-r from-sky-50/70 to-blue-50/40 border border-sky-200 shadow-sm flex flex-col sm:flex-row sm:items-start gap-3.5">
+                    <div className="w-12 h-12 rounded-2xl bg-sky-600 text-white flex items-center justify-center font-black text-base shrink-0 shadow-sm">
+                      K4
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <h5 className="font-black text-[#1E3A5F] text-sm sm:text-base">SD Kelas 4: Gender &amp; Fi'il Mudhari' Dasar</h5>
+                        <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-sky-100 text-sky-800">Tata Bahasa Dasar</span>
+                      </div>
+                      <p className="text-xs text-slate-700 font-bold mt-1">
+                        🎯 <span className="text-[#1E3A5F]">Fokus Capaian:</span> Pengenalan gender (Muzakkar/Muannats) dan kata kerja aktivitas sekarang (Fi'il Mudhari' dasar).
+                      </p>
+                      <p className="text-xs text-slate-600 font-medium mt-0.5">
+                        📚 <span className="text-slate-700 font-bold">Tema Resmi:</span> Profesi (المِهْنَة), Cita-cita (آمَال / أُمْنِيَّات), Aktivitas di rumah (الأَنْشِطَة فِي البَيْت).
+                      </p>
+                      <p className="text-[11px] text-sky-800 font-semibold mt-1 bg-sky-100/70 px-2.5 py-1 rounded-lg">
+                        ⚠️ <strong>Batasan:</strong> Fokus hanya pada waktu SEKARANG (Fi'il Mudhari' Huwa/Hiya). Jangan mencampur dengan Fi'il Madhi/Amr.
+                      </p>
                     </div>
                   </div>
 
-                  <div className="p-4 rounded-2xl bg-white border border-slate-200 flex items-center gap-3.5 shadow-sm">
-                    <div className="w-12 h-12 rounded-xl bg-rose-100 flex items-center justify-center text-2xl shrink-0">🍎</div>
-                    <div>
-                      <h5 className="font-black text-[#1E3A5F] text-sm">Level 4: Buah & Makanan (الفَوَاكِه)</h5>
-                      <p className="text-xs text-slate-500 font-medium">Apel, Pisang, Jeruk, Susu, Air putih.</p>
+                  {/* KELAS 5 */}
+                  <div className="p-4 rounded-2xl bg-gradient-to-r from-indigo-50/70 to-purple-50/40 border border-indigo-200 shadow-sm flex flex-col sm:flex-row sm:items-start gap-3.5">
+                    <div className="w-12 h-12 rounded-2xl bg-indigo-600 text-white flex items-center justify-center font-black text-base shrink-0 shadow-sm">
+                      K5
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <h5 className="font-black text-[#1E3A5F] text-sm sm:text-base">SD Kelas 5: Mubtada' Khabar &amp; Kata Sifat (Na'at)</h5>
+                        <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-800">Struktur Kalimat</span>
+                      </div>
+                      <p className="text-xs text-slate-700 font-bold mt-1">
+                        🎯 <span className="text-[#1E3A5F]">Fokus Capaian:</span> Susunan kalimat nominal Mubtada' &amp; Khabar serta Kata Sifat (Na'at &amp; Man'ut).
+                      </p>
+                      <p className="text-xs text-slate-600 font-medium mt-0.5">
+                        📚 <span className="text-slate-700 font-bold">Tema Resmi:</span> Anggota tubuh (أَعْضَاء الجِسْم), Kebun binatang (حَدِيقَة الحَيَوَانَات), Ruang tamu (غُرْفَة الجُلُوس), Kantin (المَقْصَف).
+                      </p>
+                      <p className="text-[11px] text-indigo-800 font-semibold mt-1 bg-indigo-100/70 px-2.5 py-1 rounded-lg">
+                        ⚠️ <strong>Batasan:</strong> Kalimat deskriptif nominal dan kesesuaian jenis sifat (muannats/muzakkar). Hindari amil rumit (inna/kaana).
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* KELAS 6 */}
+                  <div className="p-4 rounded-2xl bg-gradient-to-r from-purple-50/70 to-pink-50/40 border border-purple-200 shadow-sm flex flex-col sm:flex-row sm:items-start gap-3.5">
+                    <div className="w-12 h-12 rounded-2xl bg-purple-600 text-white flex items-center justify-center font-black text-base shrink-0 shadow-sm">
+                      K6
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <h5 className="font-black text-[#1E3A5F] text-sm sm:text-base">SD Kelas 6: 3 Waktu Fi'il &amp; Narasi Masa Lalu</h5>
+                        <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-purple-100 text-purple-800">Tingkat Mahir</span>
+                      </div>
+                      <p className="text-xs text-slate-700 font-bold mt-1">
+                        🎯 <span className="text-[#1E3A5F]">Fokus Capaian:</span> Perubahan waktu kata kerja utuh (Fi'il Mudhari', Amr, Madhi) dan bercerita/narasi masa lalu.
+                      </p>
+                      <p className="text-xs text-slate-600 font-medium mt-0.5">
+                        📚 <span className="text-slate-700 font-bold">Tema Resmi:</span> Waktu/Jam (السَّاعَة / الوَقْت), Liburan (العُطْلَة), Piknik (النُّزْهَة).
+                      </p>
+                      <p className="text-[11px] text-purple-800 font-semibold mt-1 bg-purple-100/70 px-2.5 py-1 rounded-lg">
+                        ⚠️ <strong>Batasan:</strong> Membandingkan perubahan bentuk 3 waktu kata kerja dan merangkai cerita liburan masa lalu berbasis waktu.
+                      </p>
                     </div>
                   </div>
                 </div>

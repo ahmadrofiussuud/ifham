@@ -1,34 +1,10 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import axios from 'axios';
+import { DEMO_USERS_5_GRADES } from '../constants/gradeCurriculum';
 
 const AuthContext = createContext();
 
-export const DEMO_USERS = [
-  {
-    id: 'demo-murid-a',
-    name: 'Ahmad Cilik (Murid A)',
-    email: 'murida@ifhamkids.com',
-    grade: 'SD Kelas 3',
-    avatar: '👦',
-    badgeColor: 'bg-emerald-100 text-emerald-700'
-  },
-  {
-    id: 'demo-murid-b',
-    name: 'Fatimah Ceria (Murid B)',
-    email: 'muridb@ifhamkids.com',
-    grade: 'SD Kelas 4',
-    avatar: '👧',
-    badgeColor: 'bg-amber-100 text-amber-700'
-  },
-  {
-    id: 'demo-murid-c',
-    name: 'Zaid Pintar (Murid C)',
-    email: 'muridc@ifhamkids.com',
-    grade: 'SD Kelas 2',
-    avatar: '🧒',
-    badgeColor: 'bg-sky-100 text-sky-700'
-  }
-];
+export const DEMO_USERS = DEMO_USERS_5_GRADES;
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
@@ -94,7 +70,8 @@ export const AuthProvider = ({ children }) => {
       id: demoUser.id,
       name: demoUser.name,
       email: demoUser.email,
-      grade: demoUser.grade
+      grade: demoUser.grade || 'SD Kelas 3',
+      avatar: demoUser.avatar || '👦'
     };
     localStorage.setItem('token', `demo-token-${demoUser.id}`);
     localStorage.setItem('user_data', JSON.stringify(userData));
@@ -102,13 +79,22 @@ export const AuthProvider = ({ children }) => {
     return userData;
   };
 
-  const register = async (fullName, email, password) => {
+  const updateGrade = (newGrade) => {
+    setUser(prev => {
+      if (!prev) return prev;
+      const updated = { ...prev, grade: newGrade };
+      localStorage.setItem('user_data', JSON.stringify(updated));
+      return updated;
+    });
+  };
+
+  const register = async (fullName, email, password, grade = 'SD Kelas 3') => {
     try {
-      const res = await axios.post(`${API_URL}/register`, { fullName, email, password });
+      const res = await axios.post(`${API_URL}/register`, { fullName, email, password, grade });
       return res.data;
     } catch (err) {
       // Mock register success if server is offline
-      const mockUser = { id: 'user-' + Date.now(), name: fullName, email };
+      const mockUser = { id: 'user-' + Date.now(), name: fullName, email, grade, avatar: '👦' };
       loginAsDemo(mockUser);
       return { message: 'User registered successfully (Demo Mode)' };
     }
@@ -121,7 +107,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, loginAsDemo, register, logout, loading }}>
+    <AuthContext.Provider value={{ user, login, loginAsDemo, updateGrade, register, logout, loading }}>
       {children}
     </AuthContext.Provider>
   );
