@@ -26,7 +26,7 @@ export default function LandingHero({ onOpenGuide }) {
       <div className="arabic-hero__inner">
         <div className="arabic-hero__intro">
           <p className="arabic-hero__eyebrow"><span /> BAHASA ARAB UNTUK ANAK SD / MI</p>
-          <h1 id="hero-heading">Dari satu kata,<br />jadi bisa<br /><span>bahasa Arab.</span></h1>
+          <h1 id="hero-heading">Bahasa Arab,<br />dekat dengan<br /><span>dunia anak.</span></h1>
           <p className="arabic-hero__description">
             Kenali kosakata, dengarkan pelafalan, lalu coba kalimat sederhana.
             Bersama Kak Ifham, anak belajar memahami sedikit demi sedikit.

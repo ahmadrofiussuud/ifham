@@ -4,7 +4,7 @@
   "private": true,
   "description": "Ifham Kids - Sahabat Socratic Belajar Bahasa Arab Anak SD",
   "scripts": {
-    "build": "cd client && npm install && npm run build && node -e \"const fs=require('fs'); if(!fs.existsSync('../dist') && fs.existsSync('dist')){fs.cpSync('dist', '../dist', {recursive: true});}\"",
+    "build": "npm --prefix client install && npm --prefix client run build",
     "server": "node server/server.js",
     "client": "cd client && npm run dev"
   },
