@@ -1,0 +1,89 @@
+.arabic-hero {
+  background: #f7f5ed;
+  color: #203e43;
+  border-bottom: 1px solid #e2e5dc;
+  margin-bottom: 76px;
+}
+.arabic-hero__inner {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 152px 40px 80px;
+  display: grid;
+  grid-template-columns: 1.05fr 1fr;
+  gap: 76px;
+  align-items: center;
+}
+.arabic-hero__eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 24px;
+  font-size: 10px;
+  letter-spacing: 1.7px;
+  font-weight: 800;
+  color: #50665b;
+}
+.arabic-hero__eyebrow > span { width: 7px; height: 7px; border-radius: 50%; background: #b56c4a; flex-shrink: 0; }
+.arabic-hero h1 { font-size: clamp(42px, 4.5vw, 64px); font-weight: 800; line-height: 1.13; letter-spacing: -2.6px; margin: 0; }
+.arabic-hero h1 > span { color: #337467; }
+.arabic-hero__description { max-width: 430px; margin-top: 24px; font-size: 15px; line-height: 1.9; color: #5b6d68; }
+.arabic-hero__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 30px; }
+.arabic-hero__primary, .arabic-hero__secondary { display: inline-flex; align-items: center; justify-content: center; gap: 14px; min-height: 50px; border-radius: 7px; padding: 13px 20px; font-size: 13px; font-weight: 700; transition: background .2s; }
+.arabic-hero__primary { background: #285e53; color: white; border: 1px solid #285e53; }
+.arabic-hero__primary:hover { background: #1d483f; }
+.arabic-hero__secondary { background: transparent; color: #294e48; border: 1px solid #c7cec0; cursor: pointer; }
+.arabic-hero__secondary:hover { background: #eceee4; }
+.arabic-hero__notes { display: flex; flex-wrap: wrap; gap: 8px 16px; margin-top: 30px; color: #627169; font-size: 10px; }
+.arabic-hero__notes span + span { border-left: 1px solid #cad1c5; padding-left: 16px; }
+.arabic-hero__lesson { min-width: 0; }
+.arabic-hero__lesson-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 14px; color: #5d7061; }
+.arabic-hero__lesson-heading > span:first-child { font-size: 9px; letter-spacing: 1.6px; font-weight: 700; }
+.arabic-hero__lesson-heading > span[lang] { font-family: 'Amiri', 'Traditional Arabic', serif; font-size: 22px; }
+.word-page { position: relative; background: #fffdf8; border: 1px solid #d8ddcf; border-radius: 4px 18px 18px 4px; padding: 28px 30px 20px 36px; box-shadow: 6px 6px 0 #e9e9dc, 7px 7px 0 #d8ddcf; }
+.word-page::before { content: ''; position: absolute; left: 12px; top: 0; bottom: 0; border-left: 1px solid #e5e3d7; }
+.word-page__header { display: flex; justify-content: space-between; align-items: center; gap: 12px; border-bottom: 1px solid #e5e7dc; padding-bottom: 16px; color: #6b786b; }
+.word-page__header > span:first-child { font-size: 9px; font-weight: 700; letter-spacing: 1.1px; }
+.word-page__divider { color: #bbc4b4; padding: 0 6px; }
+.word-page__header > span[lang] { font-family: 'Amiri', 'Traditional Arabic', serif; font-size: 18px; color: #936348; }
+.word-page__vocabulary { display: grid; grid-template-columns: .95fr 1fr; gap: 22px; align-items: center; padding: 30px 0; }
+.word-page__drawing { background: #f0ead4; border-radius: 55% 45% 45% 40%; padding: 6px; }
+.word-page__drawing svg { width: 100%; height: auto; }
+.word-page__word { text-align: center; }
+.word-page__arabic { font-family: 'Amiri', 'Traditional Arabic', serif; font-size: 64px; line-height: 1.7; color: #285e53; }
+.word-page__latin { color: #35594e; font-size: 12px; font-weight: 600; white-space: nowrap; }
+.word-page__latin span { font-weight: 400; color: #7a8073; }
+.word-page__audio { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 40px; margin-top: 12px; padding: 6px 10px; border: 1px solid #ccd9c9; border-radius: 20px; color: #336455; background: #f3f6ed; font-size: 10px; font-weight: 600; cursor: pointer; }
+.word-page__audio:hover { background: #e7eedd; }
+.word-page__sentence { padding: 20px; text-align: center; background: #f1f3ea; border-radius: 4px; }
+.word-page__label { color: #6a7864; font-size: 8px; letter-spacing: 1.5px; font-weight: 700; }
+.word-page__example { margin: 12px 0 7px; font-family: 'Amiri', 'Traditional Arabic', serif; font-size: 36px; line-height: 1.7; color: #355b4a; }
+.word-page__sentence > p:last-child { font-size: 11px; color: #6a7666; }
+.word-page__footer { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-top: 18px; font-size: 9px; color: #7a8477; }
+.word-page__footer > span:last-child { font-family: 'Amiri', 'Traditional Arabic', serif; color: #a37851; font-size: 22px; word-spacing: 8px; }
+.arabic-hero__caption { font-size: 10px; color: #74806f; margin-top: 20px; text-align: center; }
+.arabic-hero a:focus-visible, .arabic-hero button:focus-visible { outline: 3px solid #b56c4a; outline-offset: 4px; }
+@media (max-width: 1023px) {
+  .arabic-hero__inner { gap: 36px; padding: 125px 32px 60px; }
+  .arabic-hero h1 { font-size: 46px; letter-spacing: -1.7px; }
+  .word-page { padding: 22px 20px 18px 28px; }
+  .word-page__vocabulary { gap: 12px; }
+  .word-page__arabic { font-size: 54px; }
+}
+@media (max-width: 767px) {
+  .arabic-hero__inner { grid-template-columns: 1fr; gap: 48px; padding: 112px 24px 48px; max-width: 580px; }
+  .arabic-hero h1 { font-size: 46px; line-height: 1.14; }
+  .arabic-hero__description { font-size: 14px; }
+  .arabic-hero__notes { font-size: 9px; gap: 8px 10px; }
+  .arabic-hero__notes span + span { padding-left: 10px; }
+  .arabic-hero__eyebrow { letter-spacing: 1.1px; font-size: 9px; }
+  .word-page__arabic { font-size: 60px; }
+  .word-page__vocabulary { gap: 24px; }
+  .arabic-hero { margin-bottom: 48px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .arabic-hero a, .arabic-hero button { transition: none; }
+}
+@media (max-width: 640px) {
+  /* Keep the hero's type scale independent of the site's global heading override. */
+  .arabic-hero #hero-heading { font-size: clamp(38px, 10.5vw, 48px) !important; line-height: 1.14 !important; }
+}
